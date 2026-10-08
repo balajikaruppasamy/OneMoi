@@ -9,9 +9,8 @@ services:
     runtime: docker
     plan: free
     region: singapore                 # closest free region to India — pick the same region as your Supabase project if possible
-    rootDir: src/backend
-    dockerfilePath: ./Dockerfile
-    dockerContext: .
+    dockerfilePath: ./src/backend/Dockerfile     # paths are from the repository root
+    dockerContext: ./src/backend
     healthCheckPath: /health
     autoDeploy: true                  # every push to main redeploys
     envVars:
@@ -45,7 +44,6 @@ services:
     rootDir: src/frontend/onemoi-web
     buildCommand: npm ci && npx ng build --configuration production
     staticPublishPath: dist/onemoi-web/browser
-    pullRequestPreviewsEnabled: false
     routes:
       - type: rewrite                 # Angular routes (/vendor/dashboard …) all serve index.html
         source: /*
