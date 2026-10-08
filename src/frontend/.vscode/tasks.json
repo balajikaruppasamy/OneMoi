@@ -1,0 +1,36 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "ng serve",
+      "type": "shell",
+      "command": "npx ng serve --port 4200",
+      "options": { "cwd": "${workspaceFolder}/onemoi-web" },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeBegins": true,
+          "beginsPattern": { "regexp": "(.*?)" },
+          "endsPattern": { "regexp": "bundle generation complete|Local:" }
+        }
+      },
+      "group": { "kind": "build", "isDefault": true }
+    },
+    {
+      "label": "npm install",
+      "type": "shell",
+      "command": "npm install",
+      "options": { "cwd": "${workspaceFolder}/onemoi-web" },
+      "problemMatcher": []
+    },
+    {
+      "label": "ng build (production)",
+      "type": "shell",
+      "command": "npx ng build",
+      "options": { "cwd": "${workspaceFolder}/onemoi-web" },
+      "problemMatcher": []
+    }
+  ]
+}

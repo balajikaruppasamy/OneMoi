@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#8E1B3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<title>Counter · OneMoi</title>
+<link rel="icon" href="../brand/logo-mark.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/moi.css">
+<script src="assets/js/app.js"></script>
+<style>
+  .counter-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding: 12px 16px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border); }
+  .lookup { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 14px; }
+  .lookup.found { background: var(--green-soft); }
+  .lookup.new { background: var(--gold-soft); }
+  .amount-big { font-size: 2.2rem !important; min-height: 72px !important; text-align: right; font-weight: 800; }
+  .kbd { display: inline-block; padding: 1px 7px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface-2); font-size: .72rem; font-weight: 700; color: var(--muted); }
+  .recent-item { display: flex; gap: 12px; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  .recent-item.fresh { animation: flash 1.2s; }
+  @keyframes flash { from { background: var(--green-soft); } }
+  .net { display: inline-flex; align-items: center; gap: 6px; font-size: .8rem; font-weight: 700; padding: 6px 12px; border-radius: 99px; cursor: pointer; border: 0; font-family: inherit; }
+  .net.on { background: var(--green-soft); color: var(--green); }
+  .net.off { background: var(--red-soft); color: var(--red); }
+  .net svg { width: 16px; height: 16px; }
+</style>
+</head>
+<body data-shell="operator" data-page="counter" data-title="Counter 2" data-crumb="Surya ♥ Priya · KPR Mahal">
+<main class="content">
+  <div class="counter-bar">
+    <div class="avatar brand">BM</div>
+    <div class="grow"><div style="font-weight:800">Bala Murugan <span class="badge">OP-102</span></div><div class="xs muted">Shift 6:00 AM – 2:00 PM · Assigned by JD Moi Tech</div></div>
+    <button class="net on" id="net"><span data-icon="wifi"></span><span id="netTxt">Online · synced</span></button>
+  </div>
+
+  <div class="grid grid-main mt-4">
+    <!-- ENTRY FORM -->
+    <form class="card card-pad stack" id="entry" autocomplete="off">
+      <div class="row between"><h2>New Moi entry</h2><span class="small muted">Receipt <b id="rcNo" class="num">#0105</b></span></div>
+
+      <div class="field">
+        <label class="label" for="m">Guest mobile <span class="kbd">F2</span></label>
+        <div class="input-group"><span class="addon">+91</span><input class="input input-xl" id="m" type="tel" inputmode="numeric" maxlength="10" placeholder="Mobile no."><button type="button" class="btn btn-ghost btn-icon" title="Scan personal QR" style="height:auto;border-radius:0"><span data-icon="qr"></span></button></div>
+        <span class="hint">Try <b>9876543210</b> (returning guest) or any other number (new guest)</span>
+      </div>
+
+      <div class="lookup hide" id="lookup"></div>
+
+      <div class="grid grid-2" style="gap:12px">
+        <div class="field"><label class="label" for="n">Name <span class="req">*</span></label><input class="input" id="n" placeholder="Guest name"></div>
+        <div class="field"><label class="label" for="p">Ooru / Place</label><input class="input" id="p" placeholder="Native place" list="places">
+          <datalist id="places"><option>Pollachi</option><option>Coimbatore</option><option>Tiruppur</option><option>Udumalpet</option><option>Palani</option></datalist></div>
+      </div>
+
+      <div class="field">
+        <label class="label" for="a">Moi amount <span class="req">*</span></label>
+        <div class="input-group"><span class="addon" style="font-size:1.5rem">₹</span><input class="input amount-big num" id="a" inputmode="numeric" placeholder="0"></div>
+        <div class="chips mt-1" id="quick">
+          <button type="button" class="chip" data-value="101">101</button><button type="button" class="chip" data-value="201">201</button>
+          <button type="button" class="chip" data-value="501">501</button><button type="button" class="chip" data-value="1001">1,001</button>
+          <button type="button" class="chip" data-value="2001">2,001</button><button type="button" class="chip" data-value="5001">5,001</button>
+        </div>
+      </div>
+
+      <div class="segmented" id="mode">
+        <button type="button" class="active" data-value="Cash"><span data-icon="cash"></span>Cash</button>
+        <button type="button" data-value="UPI"><span data-icon="upi"></span>UPI</button>
+        <button type="button" data-value="Card"><span data-icon="wallet"></span>Card</button>
+      </div>
+
+      <div class="grid grid-2" style="gap:10px">
+        <button type="button" class="btn btn-outline btn-lg" id="clearBtn">Clear <span class="kbd">Esc</span></button>
+        <button type="submit" class="btn btn-primary btn-lg"><span data-icon="printer"></span>Save &amp; Print <span class="kbd" style="background:rgba(255,255,255,.15);color:inherit;border-color:transparent">Enter</span></button>
+      </div>
+      <label class="check small"><input type="checkbox" checked> Send SMS / WhatsApp receipt to guest</label>
+    </form>
+
+    <!-- SIDE: session + recent -->
+    <div class="stack">
+      <div class="hero-card">
+        <div class="small muted">My counter today</div>
+        <div class="money" style="font-size:2rem" id="myTotal">₹91,800</div>
+        <div class="row mt-3" style="gap:20px">
+          <div><div class="xs muted">Entries</div><b id="myCount">104</b></div>
+          <div><div class="xs muted">Cash in hand</div><b id="myCash">₹68,300</b></div>
+          <div><div class="xs muted">UPI</div><b id="myUpi">₹23,500</b></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Recent entries</h3><span class="xs muted">Edit within 10 min</span></div>
+        <div id="recent"></div>
+      </div>
+      <button class="btn btn-outline btn-block"><span data-icon="file"></span>Close counter &amp; hand over cash</button>
+    </div>
+  </div>
+</main>
+
+<script>
+const KNOWN = { "9876543210": { n: "Ram Kumar", p: "Pollachi", visits: 3 } };
+let mode = "Cash", rc = 105, online = true, queued = 0;
+let total = 91800, count = 104, cash = 68300, upi = 23500;
+const recent = [["Lakshmi S","Tiruppur",1001,"Cash","10:41"],["Senthil V","Udumalpet",501,"UPI","10:40"],["Meena R","Coimbatore",2001,"Cash","10:38"],["Karthik P","Erode",1001,"Cash","10:37"]];
+
+function renderRecent(fresh) {
+  document.getElementById("recent").innerHTML = recent.slice(0, 6).map((r, i) =>
+    '<div class="recent-item ' + (fresh && i === 0 ? "fresh" : "") + '"><div class="grow"><div class="small" style="font-weight:700">' + r[0] + ' <span class="muted xs">· ' + r[1] + '</span></div><div class="xs muted">' + r[4] + ' · ' + r[3] + (r[5] ? ' · <span style="color:var(--red)">queued offline</span>' : "") + '</div></div>' +
+    '<b class="num">' + OM.inr(r[2]) + '</b><button class="btn btn-ghost btn-icon btn-sm" title="Edit">' + OM.icon("edit") + '</button></div>').join("");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const $ = id => document.getElementById(id);
+  const m = $("m"), n = $("n"), p = $("p"), a = $("a"), look = $("lookup");
+  renderRecent(); m.focus();
+
+  m.addEventListener("input", () => {
+    m.value = m.value.replace(/\D/g, "").slice(0, 10);
+    if (m.value.length < 10) { look.classList.add("hide"); return; }
+    const k = KNOWN[m.value];
+    look.classList.remove("hide", "found", "new");
+    if (k) {
+      look.classList.add("found");
+      look.innerHTML = '<div class="avatar green">' + OM.icon("check").replace("<svg", '<svg style="width:20px"') + '</div><div class="grow"><b>Returning guest: ' + k.n + '</b><div class="xs muted">' + k.p + ' · ' + k.visits + ' Moi at JD Moi Tech functions · OneMoi verified</div></div>';
+      n.value = k.n; p.value = k.p; a.focus();
+    } else {
+      look.classList.add("new");
+      look.innerHTML = '<div class="avatar">' + OM.icon("plus").replace("<svg", '<svg style="width:20px"') + '</div><div class="grow"><b>New guest</b><div class="xs muted">A OneMoi identity will be created for this mobile number</div></div>';
+      n.value = ""; p.value = ""; n.focus();
+    }
+  });
+  a.addEventListener("input", () => (a.value = a.value.replace(/\D/g, "").slice(0, 7)));
+  OM.bindGroup($("quick"), v => { a.value = v; });
+  OM.bindGroup($("mode"), v => (mode = v));
+
+  // Enter moves to next field; Enter on amount saves
+  [m, n, p].forEach((el, i, arr) => el.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); (arr[i + 1] || a).focus(); } }));
+
+  function clear() { $("entry").reset(); look.classList.add("hide"); document.querySelectorAll("#quick .chip").forEach(c => c.classList.remove("active")); m.focus(); }
+  $("clearBtn").onclick = clear;
+  document.addEventListener("keydown", e => { if (e.key === "Escape") clear(); if (e.key === "F2") { e.preventDefault(); m.focus(); } });
+
+  $("entry").addEventListener("submit", e => {
+    e.preventDefault();
+    if (!n.value.trim()) { OM.toast("Enter the guest's name", "err"); n.focus(); return; }
+    const amt = +a.value; if (!amt) { OM.toast("Enter the Moi amount", "err"); a.focus(); return; }
+    const now = new Date(), t = now.getHours() + ":" + String(now.getMinutes()).padStart(2, "0");
+    recent.unshift([n.value.trim(), p.value || "—", amt, mode, t, !online]);
+    total += amt; count++; if (mode === "Cash") cash += amt; else upi += amt;
+    $("myTotal").textContent = OM.inr(total); $("myCount").textContent = count; $("myCash").textContent = OM.inr(cash); $("myUpi").textContent = OM.inr(upi);
+    rc++; $("rcNo").textContent = "#" + String(rc).padStart(4, "0");
+    if (!online) { queued++; $("netTxt").textContent = "Offline · " + queued + " queued"; }
+    renderRecent(true);
+    OM.toast(OM.inr(amt) + " saved · Receipt printing" + (online ? "" : " (will sync)"), "ok");
+    clear();
+  });
+
+  $("net").onclick = () => {
+    online = !online;
+    const b = $("net"); b.className = "net " + (online ? "on" : "off");
+    b.querySelector("[data-icon]").innerHTML = OM.icon(online ? "wifi" : "wifiOff");
+    if (online && queued) { OM.toast(queued + " offline entries synced", "ok"); queued = 0; recent.forEach(r => (r[5] = false)); renderRecent(); }
+    $("netTxt").textContent = online ? "Online · synced" : "Offline · saving locally";
+  };
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#8E1B3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<title>Create account · OneMoi</title>
+<link rel="icon" href="../brand/logo-mark.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/moi.css">
+<script src="assets/js/app.js"></script>
+</head>
+<body>
+<div class="auth">
+  <section class="auth-hero">
+    <div class="on-dark" data-logo data-size="44"></div>
+    <div class="stack" id="heroIndividual">
+      <div class="ta-line">இலவசம் — எப்போதும்</div>
+      <h1>Free for everyone who gives Moi.</h1>
+      <ul style="opacity:.9;padding-left:18px;line-height:2">
+        <li>See every Moi you've given, at any function and through any vendor</li>
+        <li>Year-wise and function-wise totals</li>
+        <li>Pay Moi by QR when you can't attend</li>
+        <li>Personal QR for faster entry at the counter</li>
+      </ul>
+    </div>
+    <div class="stack hide" id="heroVendor">
+      <div class="ta-line">மொய் சேவை நிறுவனங்களுக்கு</div>
+      <h1>Run every function from one dashboard.</h1>
+      <ul style="opacity:.9;padding-left:18px;line-height:2">
+        <li>Unlimited functions on the same day</li>
+        <li>Create operators and assign them to counters per function</li>
+        <li>Live collection, cash + UPI, counter-wise reports</li>
+        <li>Receipts by SMS / WhatsApp, Excel &amp; PDF export</li>
+      </ul>
+    </div>
+    <div class="row small" style="opacity:.7"><span data-icon="shield" style="width:18px"></span> Your data is protected under the DPDP Act 2023</div>
+  </section>
+
+  <section class="auth-panel">
+    <div class="auth-box stack">
+      <div class="row between">
+        <div class="auth-logo" data-logo data-size="40"></div>
+        <button class="btn btn-ghost btn-icon" data-theme-toggle title="Toggle theme" style="margin-left:auto"></button>
+      </div>
+
+      <div class="stepper mt-2">
+        <div class="step active"><i>1</i>Details</div><div class="line"></div>
+        <div class="step"><i>2</i>Verify</div><div class="line"></div>
+        <div class="step"><i>3</i>Done</div>
+      </div>
+
+      <div>
+        <h1>Create your account</h1>
+        <p class="muted mt-1">It takes less than a minute.</p>
+      </div>
+
+      <div class="grid" style="gap:10px">
+        <label class="choice">
+          <input type="radio" name="type" value="individual" checked>
+          <div class="icon-tile" data-icon="user"></div>
+          <div class="grow"><div style="font-weight:800">Individual</div><div class="small muted">Track the Moi I give · Free</div></div>
+          <span class="tick" data-icon="check"></span>
+        </label>
+        <label class="choice">
+          <input type="radio" name="type" value="vendor">
+          <div class="icon-tile gold" data-icon="store"></div>
+          <div class="grow"><div style="font-weight:800">Moi Vendor / Service</div><div class="small muted">I run Moi counters at functions · 14-day free trial</div></div>
+          <span class="tick" data-icon="check"></span>
+        </label>
+      </div>
+
+      <form id="regForm" class="stack" novalidate>
+        <!-- Vendor-only fields -->
+        <div class="stack hide" id="vendorFields">
+          <div class="field"><label class="label" for="biz">Business name <span class="req">*</span></label><input class="input" id="biz" placeholder="e.g. JD Moi Tech"></div>
+          <div class="grid grid-2" style="gap:12px">
+            <div class="field"><label class="label" for="city">City <span class="req">*</span></label><input class="input" id="city" placeholder="Coimbatore"></div>
+            <div class="field"><label class="label" for="fpm">Functions / month</label>
+              <select class="select" id="fpm"><option>1 – 5</option><option>6 – 20</option><option>21 – 50</option><option>50+</option></select></div>
+          </div>
+          <div class="field"><label class="label" for="gst">GSTIN <span class="muted">(optional)</span></label><input class="input" id="gst" placeholder="33ABCDE1234F1Z5" autocapitalize="characters"></div>
+        </div>
+
+        <div class="field"><label class="label" for="name"><span id="nameLbl">Full name</span> <span class="req">*</span></label><input class="input" id="name" autocomplete="name" placeholder="Ram Kumar"></div>
+        <div class="field">
+          <label class="label" for="mobile">Mobile number <span class="req">*</span></label>
+          <div class="input-group"><span class="addon">+91</span><input class="input" id="mobile" type="tel" inputmode="numeric" maxlength="10" placeholder="98765 43210"></div>
+          <span class="hint" id="mobileHint">This becomes your permanent Moi identity.</span>
+        </div>
+        <div class="grid grid-2" style="gap:12px" id="indFields">
+          <div class="field"><label class="label" for="place">Native place / Ooru</label><input class="input" id="place" placeholder="Pollachi"></div>
+          <div class="field"><label class="label" for="work">Work <span class="muted">(optional)</span></label><input class="input" id="work" placeholder="Teacher"></div>
+        </div>
+
+        <label class="check"><input type="checkbox" id="consent"> <span>I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>, and I consent to OneMoi linking Moi records made with this mobile number to my account.</span></label>
+        <div class="error-text hide" id="err"></div>
+
+        <button class="btn btn-primary btn-lg btn-block" type="submit" id="go">Continue — Send OTP</button>
+      </form>
+
+      <p class="center small">Already have an account? <a href="login.html">Login</a></p>
+    </div>
+  </section>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const $ = id => document.getElementById(id);
+  let type = "individual";
+  document.querySelectorAll('input[name="type"]').forEach(r => r.addEventListener("change", () => {
+    type = r.value; const v = type === "vendor";
+    $("vendorFields").classList.toggle("hide", !v); $("indFields").classList.toggle("hide", v);
+    $("heroVendor").classList.toggle("hide", !v); $("heroIndividual").classList.toggle("hide", v);
+    $("nameLbl").textContent = v ? "Owner name" : "Full name";
+    $("mobileHint").textContent = v ? "Used to log in to your vendor dashboard." : "This becomes your permanent Moi identity.";
+  }));
+  $("mobile").addEventListener("input", e => (e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10)));
+
+  $("regForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const err = $("err"); err.classList.add("hide");
+    const fail = (msg, el) => { err.textContent = msg; err.classList.remove("hide"); if (el) el.focus(); };
+    if (type === "vendor" && !$("biz").value.trim()) return fail("Enter your business name", $("biz"));
+    if (!$("name").value.trim()) return fail("Enter your name", $("name"));
+    if (!/^[6-9]\d{9}$/.test($("mobile").value)) return fail("Enter a valid 10-digit mobile number", $("mobile"));
+    if (!$("consent").checked) return fail("Please accept the terms to continue");
+    $("go").innerHTML = '<span class="spinner"></span> Sending OTP…'; $("go").disabled = true;
+    try { sessionStorage.setItem("om-mobile", $("mobile").value); sessionStorage.setItem("om-role", type); sessionStorage.setItem("om-flow", "register"); } catch (e) {}
+    setTimeout(() => (location.href = "otp.html"), 700);
+  });
+});
+</script>
+</body>
+</html>

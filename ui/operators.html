@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#8E1B3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<title>Operators · OneMoi</title>
+<link rel="icon" href="../brand/logo-mark.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/moi.css">
+<script src="assets/js/app.js"></script>
+<style>
+  .board { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 16px; align-items: start; }
+  .pool { position: sticky; top: calc(var(--topbar-h) + 16px); }
+  .op { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 14px; border: 1.5px solid var(--border); background: var(--surface); cursor: grab; user-select: none; transition: border-color .15s, background .15s, opacity .15s; }
+  .op + .op { margin-top: 8px; }
+  .op.selected { border-color: var(--brand); background: var(--brand-soft); box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 18%, transparent); }
+  .op.used { opacity: .45; }
+  .op .name { font-weight: 700; font-size: .9rem; }
+  .fn-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .fn-col { border-radius: 22px; background: var(--surface); border: 1px solid var(--border); overflow: hidden; }
+  .fn-col .head { padding: 16px; background: linear-gradient(135deg, var(--brand-soft), transparent); border-bottom: 1px solid var(--border); }
+  .slot { margin: 12px; padding: 12px; border-radius: 16px; border: 2px dashed var(--border); min-height: 74px; display: flex; align-items: center; gap: 10px; transition: border-color .15s, background .15s; cursor: pointer; }
+  .slot.over, body.picking .slot.empty:hover { border-color: var(--brand); background: var(--brand-soft); }
+  body.picking .slot.empty { border-color: color-mix(in srgb, var(--brand) 45%, var(--border)); }
+  .slot.filled { border-style: solid; border-color: color-mix(in srgb, var(--green) 40%, var(--border)); background: var(--green-soft); cursor: default; }
+  .slot .ctr-no { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--surface-2); font-weight: 800; font-size: .8rem; flex: none; }
+  .slot.filled .ctr-no { background: var(--green); color: #fff; }
+  @media (max-width: 1200px) { .fn-cols { grid-template-columns: 1fr 1fr; } }
+  .board > * { min-width: 0; }
+  @media (max-width: 960px) { .board { grid-template-columns: minmax(0, 1fr); } .pool { position: static; } .pool .pool-list { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; } .pool .op { flex: none; margin: 0 !important; } .fn-cols { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body data-shell="vendor" data-page="operators" data-title="Operators" data-crumb="JD Moi Tech · Assign for Sun, 5 Oct"
+      data-top-action='<button class="btn btn-primary btn-sm" data-open="addOp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span class="hide-mobile">Add operator</span></button>'>
+<main class="content">
+  <div class="tabs" id="tabs">
+    <button class="active" data-value="assign">Assign to functions</button>
+    <button data-value="all">All operators <span class="count">12</span></button>
+  </div>
+
+  <!-- ASSIGN BOARD -->
+  <section id="assign" class="mt-4">
+    <div class="alert mb-4"><span data-icon="info"></span><div class="small"><b>Tap an operator, then tap a counter</b> (or drag on desktop). Operators can log in only to their assigned function and counter, and only during its time window. Access ends automatically when the function closes.</div></div>
+    <div class="board">
+      <div class="pool card card-pad">
+        <div class="row between mb-2"><h3>Operator pool</h3><span class="badge" id="freeCount">3 free</span></div>
+        <div class="pool-list" id="pool"></div>
+      </div>
+      <div>
+        <div class="fn-cols" id="cols"></div>
+        <div class="row end mt-4 wrap">
+          <button class="btn btn-outline" id="clear"><span data-icon="refresh"></span>Reset</button>
+          <button class="btn btn-gold" id="sms"><span data-icon="bell"></span>Send login PINs by SMS</button>
+          <button class="btn btn-primary" id="save"><span data-icon="check"></span>Save assignments</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ALL OPERATORS -->
+  <section id="all" class="mt-4 hide">
+    <div class="card">
+      <div class="table-wrap">
+        <table class="table table-stack">
+          <thead><tr><th>Operator</th><th>Operator ID</th><th>Mobile</th><th>Today</th><th class="r">Functions done</th><th class="r">Avg sec/entry</th><th>Status</th><th></th></tr></thead>
+          <tbody id="opRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Add operator -->
+  <div class="modal-backdrop" id="addOp">
+    <div class="modal" style="max-width:500px">
+      <div class="modal-head"><h2>Add operator</h2><button class="btn btn-ghost btn-icon btn-sm" data-close data-icon="x"></button></div>
+      <div class="modal-body stack">
+        <div class="field"><label class="label">Full name <span class="req">*</span></label><input class="input" placeholder="Jothi Lakshmi"></div>
+        <div class="field"><label class="label">Mobile <span class="req">*</span></label><div class="input-group"><span class="addon">+91</span><input class="input" type="tel" inputmode="numeric" maxlength="10" placeholder="PIN is sent here"></div></div>
+        <div class="grid grid-2" style="gap:12px">
+          <div class="field"><label class="label">Operator ID</label><input class="input" value="OP-113" readonly></div>
+          <div class="field"><label class="label">Login PIN</label><input class="input num" value="4 8 2 7" readonly><span class="hint">Auto-generated</span></div>
+        </div>
+        <div class="field"><span class="label">Permissions</span>
+          <label class="check"><input type="checkbox" checked> Record Moi (cash &amp; UPI)</label>
+          <label class="check"><input type="checkbox" checked> Correct own entry within 10 minutes</label>
+          <label class="check"><input type="checkbox"> View counter summary</label>
+          <label class="check"><input type="checkbox"> Act as counter supervisor (approve corrections)</label>
+        </div>
+      </div>
+      <div class="modal-foot"><button class="btn btn-outline" data-close>Cancel</button><button class="btn btn-primary" data-close onclick="OM.toast('Operator added · PIN sent by SMS','ok')">Add &amp; send PIN</button></div>
+    </div>
+  </div>
+</main>
+
+<script>
+const OPS = [
+  ["AR","Arun Raj","OP-101"],["BM","Bala Murugan","OP-102"],["CS","Chitra Selvi","OP-103"],["DN","Dinesh N","OP-104"],
+  ["ES","Esther S","OP-105"],["FZ","Faizal Z","OP-106"],["GN","Ganesh N","OP-107"],["HR","Hari R","OP-108"],
+  ["IN","Indhu N","OP-109"],["JL","Jothi L","OP-110"],["KV","Karthi V","OP-111"],["LM","Latha M","OP-112"]
+];
+const FNS = [
+  { name: "Surya ♥ Priya", meta: "Marriage · KPR Mahal", time: "6:00 AM – 2:00 PM" },
+  { name: "Manikandan Keda Vettu", meta: "Keda Vettu · Kinathukadavu", time: "9:00 AM – 4:00 PM" },
+  { name: "Kavya Ear Piercing", meta: "Ear Piercing · Palani", time: "10:00 AM – 1:00 PM" }
+];
+// assignment[fnIndex][counterIndex] = opIndex | null — pre-filled with the 3×3 example
+let A = [[0,1,2],[3,4,5],[6,7,null]];
+let picked = null;
+
+function render() {
+  const used = new Set(A.flat().filter(x => x !== null));
+  document.getElementById("pool").innerHTML = OPS.map((o, i) =>
+    '<div class="op ' + (used.has(i) ? "used " : "") + (picked === i ? "selected" : "") + '" draggable="' + !used.has(i) + '" data-op="' + i + '">' +
+    '<div class="avatar sm">' + o[0] + '</div><div class="grow"><div class="name">' + o[1] + '</div><div class="xs muted">' + o[2] + '</div></div>' +
+    (used.has(i) ? '<span class="badge green">Assigned</span>' : '<span class="badge">Free</span>') + '</div>').join("");
+  document.getElementById("freeCount").textContent = (OPS.length - used.size) + " free";
+
+  document.getElementById("cols").innerHTML = FNS.map((f, fi) =>
+    '<div class="fn-col"><div class="head"><div class="row between"><span class="badge green live"><span class="dot"></span>Today</span><span class="badge brand">' + A[fi].filter(x => x !== null).length + '/' + A[fi].length + '</span></div>' +
+    '<h3 class="mt-2">' + f.name + '</h3><div class="xs muted">' + f.meta + '</div><div class="xs muted row mt-1" style="gap:4px">' + f.time + '</div></div>' +
+    A[fi].map((op, ci) => op === null
+      ? '<div class="slot empty" data-f="' + fi + '" data-c="' + ci + '"><div class="ctr-no">C' + (ci + 1) + '</div><div class="grow small muted">Drop or tap to assign<br><span class="xs">Counter ' + (ci + 1) + '</span></div>' + OM.icon("plus").replace("<svg", '<svg style="width:20px;color:var(--muted)"') + '</div>'
+      : '<div class="slot filled" data-f="' + fi + '" data-c="' + ci + '"><div class="ctr-no">C' + (ci + 1) + '</div><div class="avatar sm">' + OPS[op][0] + '</div><div class="grow"><div style="font-weight:700" class="small">' + OPS[op][1] + '</div><div class="xs muted">' + OPS[op][2] + ' · Counter ' + (ci + 1) + '</div></div><button class="btn btn-ghost btn-icon btn-sm" data-remove title="Unassign">' + OM.icon("x") + '</button></div>'
+    ).join("") +
+    '<button class="btn btn-ghost btn-sm" style="margin:0 12px 12px" data-addctr="' + fi + '">' + OM.icon("plus") + 'Add counter</button></div>'
+  ).join("");
+  document.body.classList.toggle("picking", picked !== null);
+}
+
+function assign(op, fi, ci) {
+  if (A[fi][ci] !== null) return;
+  A[fi][ci] = op; picked = null; render();
+  OM.toast(OPS[op][1] + " → " + FNS[fi].name + " · Counter " + (ci + 1), "ok");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  render();
+  const pool = document.getElementById("pool"), cols = document.getElementById("cols");
+  pool.addEventListener("click", e => { const o = e.target.closest(".op"); if (!o || o.classList.contains("used")) return; picked = picked === +o.dataset.op ? null : +o.dataset.op; render(); });
+  cols.addEventListener("click", e => {
+    if (e.target.closest("[data-remove]")) { const s = e.target.closest(".slot"); A[s.dataset.f][s.dataset.c] = null; render(); return; }
+    const add = e.target.closest("[data-addctr]"); if (add) { A[add.dataset.addctr].push(null); render(); return; }
+    const s = e.target.closest(".slot.empty"); if (!s) return;
+    if (picked === null) { OM.toast("Select an operator from the pool first"); return; }
+    assign(picked, +s.dataset.f, +s.dataset.c);
+  });
+  // Drag & drop (desktop)
+  pool.addEventListener("dragstart", e => { const o = e.target.closest(".op"); if (o) e.dataTransfer.setData("text/plain", o.dataset.op); });
+  cols.addEventListener("dragover", e => { const s = e.target.closest(".slot.empty"); if (s) { e.preventDefault(); s.classList.add("over"); } });
+  cols.addEventListener("dragleave", e => { const s = e.target.closest(".slot"); if (s) s.classList.remove("over"); });
+  cols.addEventListener("drop", e => { const s = e.target.closest(".slot.empty"); if (!s) return; e.preventDefault(); assign(+e.dataTransfer.getData("text/plain"), +s.dataset.f, +s.dataset.c); });
+
+  document.getElementById("clear").onclick = () => { A = [[null,null,null],[null,null,null],[null,null,null]]; picked = null; render(); };
+  document.getElementById("save").onclick = () => OM.toast("Assignments saved for Sun, 5 Oct", "ok");
+  document.getElementById("sms").onclick = () => OM.toast("Login details sent to " + A.flat().filter(x => x !== null).length + " operators", "ok");
+
+  OM.bindGroup(document.getElementById("tabs"), v => { document.getElementById("assign").classList.toggle("hide", v !== "assign"); document.getElementById("all").classList.toggle("hide", v !== "all"); });
+  document.getElementById("opRows").innerHTML = OPS.map((o, i) => {
+    const fi = A.findIndex(r => r.includes(i));
+    return '<tr><td data-label="Operator"><div class="row" style="gap:10px"><div class="avatar sm">' + o[0] + '</div><b>' + o[1] + '</b></div></td><td data-label="Operator ID"><span class="badge">' + o[2] + '</span></td>' +
+      '<td data-label="Mobile" class="num">9' + (8 - i % 3) + '•••• ••' + (100 + i * 7) + '</td>' +
+      '<td data-label="Today">' + (fi >= 0 ? FNS[fi].name.split(" ")[0] + " · C" + (A[fi].indexOf(i) + 1) : '<span class="muted">—</span>') + '</td>' +
+      '<td data-label="Functions done" class="r num">' + (40 - i * 3) + '</td><td data-label="Avg sec/entry" class="r num">' + (6 + (i % 4)) + '.' + (i % 9) + '</td>' +
+      '<td data-label="Status">' + (fi >= 0 ? '<span class="badge green"><span class="dot"></span>On duty</span>' : '<span class="badge">Available</span>') + '</td>' +
+      '<td class="r" data-label=""><button class="btn btn-ghost btn-sm" onclick="OM.toast(\'PIN reset · sent by SMS\',\'ok\')">Reset PIN</button></td></tr>';
+  }).join("");
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+# ── Secrets: never commit ──
+appsettings.Development.json
+appsettings.*.local.json
+*.env
+.env*
+!appsettings.Development.example.json
+
+# ── .NET ──
+bin/
+obj/
+*.user
+*.suo
+.vs/
+TestResults/
+src/backend/OneMoi.Api/wwwroot/uploads/
+
+# ── Angular / Node ──
+node_modules/
+dist/
+.angular/
+
+# ── Local tools ──
+.claude/
+*.log
+
+# ── OS ──
+.DS_Store
+Thumbs.db

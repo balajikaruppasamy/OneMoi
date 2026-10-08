@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#8E1B3A">
+<title>OneMoi · Screen templates</title>
+<link rel="icon" href="../brand/logo-mark.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/moi.css">
+<script src="assets/js/app.js"></script>
+<style>
+  .wrap { max-width: 1180px; margin: 0 auto; padding: calc(24px + var(--safe-t)) 16px 60px; }
+  .tile { display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 20px; background: var(--surface); border: 1px solid var(--border); color: inherit; text-decoration: none !important; font-weight: 400; transition: transform .12s, box-shadow .15s; }
+  .tile:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .tile h3 { font-size: 1rem; }
+  .group-title { display: flex; align-items: center; gap: 10px; margin: 32px 0 12px; }
+  .brand-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .brand-row .card { display: grid; place-items: center; min-height: 160px; padding: 20px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="row between">
+    <div data-logo data-size="48"></div>
+    <button class="btn btn-ghost btn-icon" data-theme-toggle></button>
+  </div>
+
+  <div class="hero-card mt-6">
+    <div class="small muted">UI template kit · v1</div>
+    <h1 class="mt-1" style="font-size:clamp(1.6rem,3vw,2.4rem)">One Mobile. One Moi Identity. Every Function.</h1>
+    <p class="muted mt-2 ta" style="font-size:1.05rem">ஒரே Mobile — முழு மொய் வரலாறு</p>
+    <div class="row wrap mt-4"><a class="btn btn-gold" href="splash.html">Start the flow →</a><a class="btn btn-ghost" style="color:#FFF9F0" href="../docs/MODULE_ANALYSIS.md">Module analysis</a></div>
+  </div>
+
+  <div class="group-title"><span class="icon-tile" data-icon="lock"></span><h2>Onboarding &amp; auth</h2></div>
+  <div class="grid grid-4">
+    <a class="tile" href="splash.html"><span class="badge brand" style="align-self:flex-start">Common</span><h3>Splash / loading</h3><p class="small muted">Animated logo loader and its variants</p></a>
+    <a class="tile" href="login.html"><span class="badge brand" style="align-self:flex-start">Common</span><h3>Login</h3><p class="small muted">Mobile OTP, operator PIN, guest pay, Tamil/English</p></a>
+    <a class="tile" href="register.html"><span class="badge brand" style="align-self:flex-start">Common</span><h3>Register</h3><p class="small muted">Individual or Moi vendor, with DPDP consent</p></a>
+    <a class="tile" href="otp.html"><span class="badge brand" style="align-self:flex-start">Common</span><h3>OTP verify</h3><p class="small muted">6 boxes, paste + SMS autofill, resend timer, error state</p></a>
+  </div>
+
+  <div class="group-title"><span class="icon-tile green" data-icon="user"></span><h2>Individual (guest)</h2></div>
+  <div class="grid grid-4">
+    <a class="tile" href="my-moi.html"><span class="badge green" style="align-self:flex-start">Core</span><h3>My Moi history</h3><p class="small muted">Ram's ₹6,000 across JD Moi + Meenakshi Moi, with filters and receipts</p></a>
+    <a class="tile" href="pay.html"><span class="badge green" style="align-self:flex-start">No install</span><h3>Scan &amp; pay Moi</h3><p class="small muted">QR or code → function → amount → UPI → confirmed</p></a>
+  </div>
+
+  <div class="group-title"><span class="icon-tile gold" data-icon="store"></span><h2>Moi vendor (tenant)</h2></div>
+  <div class="grid grid-4">
+    <a class="tile" href="vendor-dashboard.html"><span class="badge gold" style="align-self:flex-start">Vendor</span><h3>Dashboard</h3><p class="small muted">3 live functions today, live feed, counter performance</p></a>
+    <a class="tile" href="functions.html"><span class="badge gold" style="align-self:flex-start">Vendor</span><h3>Functions</h3><p class="small muted">List, filters, create function (code + QR + counters)</p></a>
+    <a class="tile" href="operators.html"><span class="badge gold" style="align-self:flex-start">Vendor</span><h3>Operators &amp; assignment</h3><p class="small muted">3 operators × 3 functions, tap or drag to assign</p></a>
+    <a class="tile" href="reports.html"><span class="badge gold" style="align-self:flex-start">Vendor</span><h3>Reports</h3><p class="small muted">Guest, counter, operator, cash, UPI, host summary</p></a>
+  </div>
+
+  <div class="group-title"><span class="icon-tile blue" data-icon="receipt"></span><h2>Operator &amp; platform</h2></div>
+  <div class="grid grid-4">
+    <a class="tile" href="counter.html"><span class="badge blue" style="align-self:flex-start">Operator</span><h3>Counter entry</h3><p class="small muted">Keyboard-fast entry, returning-guest lookup, offline queue</p></a>
+    <a class="tile" href="admin.html"><span class="badge blue" style="align-self:flex-start">Super admin</span><h3>Tenants console</h3><p class="small muted">Vendors, plans, approvals, platform KPIs</p></a>
+    <a class="tile" href="states.html"><span class="badge" style="align-self:flex-start">Kit</span><h3>States &amp; components</h3><p class="small muted">Empty, offline, error, success, 404, loaders, tokens</p></a>
+  </div>
+
+  <div class="group-title"><span class="icon-tile" data-icon="sparkle"></span><h2>Brand assets</h2></div>
+  <div class="brand-row">
+    <div class="card"><img src="../brand/logo-mark.svg" width="110" alt="OneMoi mark"></div>
+    <div class="card"><img src="../brand/logo-full.svg" alt="OneMoi logo" style="width:100%;max-width:300px"></div>
+    <div class="card" style="background:#24161B"><img src="../brand/logo-full-dark.svg" alt="OneMoi logo on dark" style="width:100%;max-width:300px"></div>
+    <div class="card"><img src="../brand/loader.svg" width="110" alt="OneMoi loader"></div>
+  </div>
+  <p class="xs muted center mt-8">Resize the window or open on a phone. Every screen switches between the sidebar layout and bottom navigation at 960px.</p>
+</div>
+</body>
+</html>

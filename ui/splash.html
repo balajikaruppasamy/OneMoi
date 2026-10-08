@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#6A0F28">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>OneMoi · Loading</title>
+<link rel="icon" href="../brand/logo-mark.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/moi.css">
+<script src="assets/js/app.js"></script>
+<style>
+  body { background: radial-gradient(120% 80% at 50% 0%, #B8325C 0%, #8E1B3A 40%, #3E0716 100%); color: #FFF9F0; }
+  body::before { content: ""; position: fixed; inset: 0; opacity: .1; background-image: radial-gradient(#F2A516 1.6px, transparent 1.8px); background-size: 22px 22px; pointer-events: none; }
+  .splash { position: relative; min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; padding: calc(24px + var(--safe-t)) 24px calc(24px + var(--safe-b)); text-align: center; }
+  .splash .ring { position: relative; padding: 18px; }
+  .splash .ring::before { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 4px solid rgba(242,165,22,.18); border-top-color: #F2A516; animation: spin 1.2s linear infinite; }
+  .splash .ring .logo-mark { filter: drop-shadow(0 18px 30px rgba(0,0,0,.35)); }
+  .wordmark { font-size: 2.4rem; font-weight: 800; letter-spacing: -.05em; }
+  .wordmark b { color: #F2A516; }
+  .tagline { font-family: var(--font-ta); font-size: 1.05rem; color: #FFD27A; font-weight: 600; margin-top: 6px; }
+  .bar { width: 200px; height: 4px; border-radius: 4px; background: rgba(255,249,240,.15); overflow: hidden; }
+  .bar span { display: block; height: 100%; width: 40%; border-radius: inherit; background: #F2A516; animation: slide 1.4s ease-in-out infinite; }
+  @keyframes slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(260%); } }
+  .status { font-size: .85rem; color: rgba(255,249,240,.7); min-height: 1.3em; }
+  .foot { position: absolute; bottom: calc(20px + var(--safe-b)); left: 0; right: 0; font-size: .75rem; color: rgba(255,249,240,.55); }
+  .variants { display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+  .variants > div { display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: .72rem; color: rgba(255,249,240,.6); }
+  .variants .inline-loader { width: 56px; height: 56px; display: grid; place-items: center; border-radius: 18px; background: rgba(255,249,240,.08); }
+  .dots span { display: inline-block; width: 8px; height: 8px; margin: 0 3px; border-radius: 50%; background: #F2A516; animation: bounce 1s infinite; }
+  .dots span:nth-child(2) { animation-delay: .15s; } .dots span:nth-child(3) { animation-delay: .3s; }
+  @keyframes bounce { 0%, 80%, 100% { transform: scale(.5); opacity: .5; } 40% { transform: scale(1); opacity: 1; } }
+</style>
+</head>
+<body>
+  <div class="splash">
+    <div class="ring" data-logo="mark" data-size="120" data-animated></div>
+    <div>
+      <div class="wordmark">One<b>Moi</b></div>
+      <div class="tagline">ஒரே Mobile — முழு மொய் வரலாறு</div>
+    </div>
+    <div class="bar"><span></span></div>
+    <div class="status" id="status">Securing your Moi ledger…</div>
+
+    <div class="variants" aria-label="Loader variants">
+      <div><div class="inline-loader" data-logo="mark" data-size="36" data-animated></div>Inline loader</div>
+      <div><div class="inline-loader"><div class="dots"><span></span><span></span><span></span></div></div>Button / list</div>
+      <div><div class="inline-loader"><img src="../brand/loader.svg" width="44" height="44" alt=""></div>loader.svg (SMIL)</div>
+    </div>
+    <a class="btn btn-gold mt-2" href="login.html">Continue to login</a>
+
+    <div class="foot">v1.0 · Secure · Made for Tamil functions</div>
+  </div>
+<script>
+  const msgs = ["Securing your Moi ledger…", "Connecting to OneMoi cloud…", "Syncing counters…", "Almost ready…"];
+  let i = 0; setInterval(() => { i = (i + 1) % msgs.length; document.getElementById("status").textContent = msgs[i]; }, 1300);
+</script>
+</body>
+</html>

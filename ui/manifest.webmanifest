@@ -1,0 +1,14 @@
+{
+  "name": "OneMoi — One Moi Identity",
+  "short_name": "OneMoi",
+  "description": "One mobile number. One Moi identity. Your complete Moi history across every function and vendor.",
+  "start_url": "splash.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#6A0F28",
+  "theme_color": "#8E1B3A",
+  "lang": "en-IN",
+  "icons": [
+    { "src": "../brand/logo-mark.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#8E1B3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<title>Tenants · OneMoi Admin</title>
+<link rel="icon" href="../brand/logo-mark.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/moi.css">
+<script src="assets/js/app.js"></script>
+</head>
+<body data-shell="admin" data-page="admin" data-title="Moi vendors (tenants)" data-crumb="Platform console">
+<main class="content">
+  <div class="grid grid-4">
+    <div class="stat"><div class="stat-label"><span class="stat-icon" data-icon="store"></span>Active vendors</div><div class="stat-value">42</div><div class="stat-delta">▲ 6 this month</div></div>
+    <div class="stat"><div class="stat-label"><span class="stat-icon gold" data-icon="calendar"></span>Functions (Oct)</div><div class="stat-value">318</div><div class="stat-delta">▲ 18% MoM</div></div>
+    <div class="stat"><div class="stat-label"><span class="stat-icon green" data-icon="users"></span>Moi identities</div><div class="stat-value">1,24,880</div><div class="xs muted">31% verified by OTP</div></div>
+    <div class="stat"><div class="stat-label"><span class="stat-icon blue" data-icon="rupee"></span>Moi recorded (Oct)</div><div class="stat-value">₹6.4 Cr</div><div class="xs muted">Platform never holds funds</div></div>
+  </div>
+
+  <div class="grid grid-main mt-6">
+    <div class="card">
+      <div class="card-head"><h3>All vendors</h3><div class="input-group" style="max-width:240px"><input class="input" placeholder="Search vendor" style="min-height:38px"></div></div>
+      <div class="table-wrap">
+        <table class="table table-stack">
+          <thead><tr><th>Vendor</th><th>City</th><th>Plan</th><th class="r">Functions</th><th class="r">Operators</th><th>Status</th><th></th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Pending approval</h3><span class="badge gold">4</span></div>
+      <div class="list" id="pending"></div>
+    </div>
+  </div>
+</main>
+<script>
+const T = [["JD Moi Tech","Coimbatore","Pro · Annual",128,14,"Active"],["Meenakshi Moi","Madurai","Pro · Monthly",96,11,"Active"],["Sri Murugan Moi","Palani","Per-function",31,4,"Active"],["Thanjai Moi Services","Thanjavur","Starter",12,3,"Trial"],["Kongu Digital Moi","Erode","Pro · Monthly",54,8,"Active"],["Chettinad Moi Book","Karaikudi","Starter",3,2,"Suspended"]];
+const PEND = [["Velan Moi Centre","Tiruppur · 2 hrs ago"],["Amman Moi Seva","Salem · 5 hrs ago"],["Nellai Moi Tech","Tirunelveli · Yesterday"],["Kumari Moi","Nagercoil · Yesterday"]];
+const TONE = { Active: "green", Trial: "blue", Suspended: "red" };
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("rows").innerHTML = T.map(t =>
+    '<tr><td data-label="Vendor"><div class="row" style="gap:10px"><div class="avatar sm brand">' + t[0].split(" ").map(w => w[0]).join("").slice(0, 2) + '</div><b>' + t[0] + '</b></div></td><td data-label="City">' + t[1] + '</td>' +
+    '<td data-label="Plan">' + t[2] + '</td><td data-label="Functions" class="r num">' + t[3] + '</td><td data-label="Operators" class="r num">' + t[4] + '</td>' +
+    '<td data-label="Status"><span class="badge ' + TONE[t[5]] + '">' + t[5] + '</span></td><td class="r" data-label=""><button class="btn btn-ghost btn-sm">Manage ' + OM.icon("chevron") + '</button></td></tr>').join("");
+  document.getElementById("pending").innerHTML = PEND.map(p =>
+    '<div class="list-item"><div class="icon-tile gold">' + OM.icon("store") + '</div><div class="grow"><div class="title small">' + p[0] + '</div><div class="xs muted">' + p[1] + ' · KYC uploaded</div></div>' +
+    '<button class="btn btn-success btn-sm" onclick="this.closest(\'.list-item\').remove();OM.toast(\'Vendor approved\',\'ok\')">Approve</button></div>').join("");
+});
+</script>
+</body>
+</html>

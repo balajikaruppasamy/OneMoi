@@ -1,0 +1,36 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["build", "${workspaceFolder}/OneMoi.sln", "/property:GenerateFullPaths=true", "/consoleloggerparameters:NoSummary"],
+      "problemMatcher": "$msCompile",
+      "group": { "kind": "build", "isDefault": true }
+    },
+    {
+      "label": "run API (no debug)",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["run", "--project", "${workspaceFolder}/OneMoi.Api"],
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "EF: add migration",
+      "type": "shell",
+      "command": "dotnet ef migrations add ${input:migrationName} --project OneMoi.Infrastructure --startup-project OneMoi.Api --output-dir Persistence/Migrations",
+      "problemMatcher": []
+    },
+    {
+      "label": "EF: update database",
+      "type": "shell",
+      "command": "dotnet ef database update --project OneMoi.Infrastructure --startup-project OneMoi.Api",
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    { "id": "migrationName", "type": "promptString", "description": "Migration name (e.g. AddPaymentTable)" }
+  ]
+}

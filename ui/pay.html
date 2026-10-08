@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#8E1B3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<title>Pay Moi · OneMoi</title>
+<link rel="icon" href="../brand/logo-mark.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/moi.css">
+<script src="assets/js/app.js"></script>
+<style>
+  body { background: radial-gradient(100% 50% at 50% 0%, color-mix(in srgb, var(--brand) 14%, var(--bg)) 0%, var(--bg) 70%); }
+  .wrap { max-width: 480px; margin: 0 auto; padding: calc(16px + var(--safe-t)) 16px calc(32px + var(--safe-b)); }
+  .scanner { position: relative; aspect-ratio: 1; border-radius: 28px; overflow: hidden; background: #1A0D12; display: grid; place-items: center; }
+  .scanner::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 40%, #3A1822 0%, #120609 80%); }
+  .scanner .frame { position: relative; width: 62%; aspect-ratio: 1; }
+  .scanner .frame i { position: absolute; width: 38px; height: 38px; border: 5px solid var(--gold); }
+  .scanner .frame i:nth-child(1) { top: 0; left: 0; border-right: 0; border-bottom: 0; border-radius: 14px 0 0 0; }
+  .scanner .frame i:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; border-radius: 0 14px 0 0; }
+  .scanner .frame i:nth-child(3) { bottom: 0; left: 0; border-right: 0; border-top: 0; border-radius: 0 0 0 14px; }
+  .scanner .frame i:nth-child(4) { bottom: 0; right: 0; border-left: 0; border-top: 0; border-radius: 0 0 14px 0; }
+  .scanner .laser { position: absolute; left: 8%; right: 8%; height: 3px; border-radius: 3px; background: var(--gold); box-shadow: 0 0 16px var(--gold); animation: laser 2s ease-in-out infinite; }
+  @keyframes laser { 0%, 100% { top: 8%; } 50% { top: 90%; } }
+  .scanner .hint-txt { position: absolute; bottom: 18px; left: 0; right: 0; text-align: center; color: rgba(255,249,240,.75); font-size: .85rem; font-weight: 600; }
+  .amount-input { text-align: center; font-size: 2.6rem; font-weight: 800; border: 0; background: none; color: var(--text); width: 100%; font-family: var(--font); }
+  .amount-input:focus { outline: none; }
+  .fn-banner { border-radius: 22px; overflow: hidden; }
+  .fn-banner .top { padding: 18px; color: #FFF9F0; background: linear-gradient(135deg, #A8264F, #5A0C22); position: relative; }
+  .fn-banner .top::after { content: ""; position: absolute; inset: 0; opacity: .14; background-image: radial-gradient(#F2A516 1.4px, transparent 1.6px); background-size: 16px 16px; }
+  .fn-banner .top > * { position: relative; }
+  .success-art { width: 96px; height: 96px; border-radius: 50%; margin: 0 auto; display: grid; place-items: center; background: var(--green); color: #fff; box-shadow: 0 0 0 12px var(--green-soft); animation: popIn .4s cubic-bezier(.3,1.6,.5,1); }
+  .success-art svg { width: 48px; height: 48px; stroke-width: 3; }
+  .upi-apps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .upi-apps button { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 4px; border-radius: 14px; border: 1.5px solid var(--border); background: var(--surface); font: inherit; font-size: .72rem; font-weight: 700; color: var(--text-2); cursor: pointer; }
+  .upi-apps button.active { border-color: var(--brand); background: var(--brand-soft); }
+  .upi-apps .ua { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; color: #fff; font-weight: 800; font-size: .8rem; }
+</style>
+</head>
+<body>
+<div class="wrap stack">
+  <div class="row between">
+    <div data-logo data-size="36"></div>
+    <div class="row" style="gap:4px"><a class="btn btn-ghost btn-sm" href="login.html">Login</a><button class="btn btn-ghost btn-icon" data-theme-toggle></button></div>
+  </div>
+
+  <!-- STEP 1: Scan or enter code -->
+  <section id="s1" class="stack">
+    <div><h1>Pay Moi</h1><p class="muted mt-1">Scan the function QR or enter the function code. No app needed.</p></div>
+    <div class="scanner">
+      <div class="frame"><i></i><i></i><i></i><i></i><div class="laser"></div></div>
+      <div class="hint-txt">Point your camera at the function QR</div>
+    </div>
+    <div class="divider">or enter function code</div>
+    <div class="row">
+      <input class="input input-xl grow center" id="code" maxlength="6" placeholder="AB12CD" autocapitalize="characters" style="letter-spacing:.3em;text-transform:uppercase">
+      <button class="btn btn-primary btn-lg" id="find">Find</button>
+    </div>
+    <p class="xs muted center">The code is printed on the invitation, the banner, or at the Moi counter.</p>
+  </section>
+
+  <!-- STEP 2: Function details + amount -->
+  <section id="s2" class="stack hide">
+    <button class="btn btn-ghost btn-sm" style="align-self:flex-start" data-back="s1"><span data-icon="back"></span>Back</button>
+    <div class="fn-banner card">
+      <div class="top">
+        <span class="badge" style="background:rgba(255,249,240,.15);color:#FFF9F0"><span class="dot"></span>LIVE · Marriage</span>
+        <h2 class="mt-2" style="font-size:1.5rem">Surya ♥ Priya</h2>
+        <div class="small" style="opacity:.8;margin-top:4px">Sun, 5 Oct 2026 · KPR Mahal, Coimbatore</div>
+      </div>
+      <div class="row between" style="padding:12px 18px">
+        <div class="row" style="gap:8px"><div class="avatar sm brand">JD</div><div class="small"><div class="muted xs">Moi managed by</div><b>JD Moi Tech</b></div></div>
+        <span class="badge green" data-icon="shield">Verified</span>
+      </div>
+    </div>
+
+    <div class="card card-pad stack">
+      <div class="field"><label class="label" for="pm">Your mobile number</label>
+        <div class="input-group"><span class="addon">+91</span><input class="input" id="pm" type="tel" inputmode="numeric" maxlength="10" placeholder="98765 43210"></div>
+        <span class="hint">Adds this Moi to your OneMoi history.</span></div>
+      <div class="grid grid-2" style="gap:12px">
+        <div class="field"><label class="label" for="pn">Name</label><input class="input" id="pn" placeholder="Ram Kumar"></div>
+        <div class="field"><label class="label" for="pp">Ooru / Place</label><input class="input" id="pp" placeholder="Pollachi"></div>
+      </div>
+    </div>
+
+    <div class="card card-pad stack center">
+      <span class="label">Moi amount</span>
+      <input class="amount-input num" id="amt" inputmode="numeric" value="₹1,001">
+      <div class="chips" style="justify-content:center" id="quick">
+        <button class="chip" data-value="501">₹501</button><button class="chip active" data-value="1001">₹1,001</button>
+        <button class="chip" data-value="2001">₹2,001</button><button class="chip" data-value="5001">₹5,001</button><button class="chip" data-value="10001">₹10,001</button>
+      </div>
+      <div class="field" style="text-align:left"><label class="label" for="msg">Wishes <span class="muted">(optional)</span></label><input class="input" id="msg" placeholder="வாழ்த்துக்கள்! Happy married life"></div>
+    </div>
+
+    <div class="stack-sm">
+      <span class="label">Pay with UPI</span>
+      <div class="upi-apps" id="upi">
+        <button class="active"><span class="ua" style="background:#5F259F">Pe</span>PhonePe</button>
+        <button><span class="ua" style="background:#1A73E8">G</span>GPay</button>
+        <button><span class="ua" style="background:#00BAF2">P</span>Paytm</button>
+        <button><span class="ua" style="background:#7A686E">UPI</span>Other</button>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-lg btn-block" id="payBtn">Pay ₹1,001</button>
+    <p class="xs muted center row" style="justify-content:center;gap:6px"><span data-icon="lock"></span>Paid securely via UPI to the function account. OneMoi never holds your money.</p>
+  </section>
+
+  <!-- STEP 3: Processing -->
+  <section id="s3" class="stack hide center" style="padding-top:60px">
+    <div class="loader-ring" style="margin:0 auto" data-logo="mark" data-size="88" data-animated></div>
+    <h2 class="mt-6">Waiting for payment confirmation</h2>
+    <p class="muted">Complete the payment in your UPI app. Don't close this page.<br>We confirm with the bank before recording your Moi.</p>
+    <div class="progress" style="max-width:240px;margin:16px auto 0"><span id="bar" style="width:5%;transition:width 2.5s"></span></div>
+  </section>
+
+  <!-- STEP 4: Success -->
+  <section id="s4" class="stack hide">
+    <div class="center stack" style="padding-top:24px">
+      <div class="success-art" data-icon="check"></div>
+      <div><h1>Moi recorded!</h1><p class="muted mt-1 ta">மொய் வெற்றிகரமாக பதிவு செய்யப்பட்டது</p></div>
+    </div>
+    <div class="card">
+      <div class="card-body center"><div class="xs muted" style="font-weight:700">AMOUNT</div><div class="money" style="font-size:2.2rem;color:var(--green)" id="paidAmt">₹1,001</div></div>
+      <div class="list" style="border-top:1px dashed var(--border)">
+        <div class="list-item" style="padding:10px 20px"><span class="muted small grow">Function</span><b class="small">Surya ♥ Priya</b></div>
+        <div class="list-item" style="padding:10px 20px"><span class="muted small grow">Receipt no.</span><b class="small">JDM-1005-1187</b></div>
+        <div class="list-item" style="padding:10px 20px"><span class="muted small grow">UPI ref</span><b class="small num">627814523301</b></div>
+        <div class="list-item" style="padding:10px 20px"><span class="muted small grow">Status</span><span class="badge green"><span class="dot"></span>Bank confirmed</span></div>
+      </div>
+    </div>
+    <div class="hero-card">
+      <h3>See all the Moi you've ever given</h3>
+      <p class="small muted mt-1">This Moi is saved to your mobile number. Create a free account to see it alongside Moi from every other function and vendor.</p>
+      <a class="btn btn-gold btn-block mt-4" href="register.html">Create free OneMoi account</a>
+    </div>
+    <button class="btn btn-outline btn-block"><span data-icon="download"></span>Download receipt</button>
+  </section>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const show = id => { ["s1", "s2", "s3", "s4"].forEach(s => document.getElementById(s).classList.toggle("hide", s !== id)); window.scrollTo(0, 0); };
+  let amount = 1001;
+  const amt = document.getElementById("amt"), payBtn = document.getElementById("payBtn");
+  const setAmt = n => { amount = n; amt.value = OM.inr(n); payBtn.textContent = "Pay " + OM.inr(n); };
+
+  document.getElementById("find").addEventListener("click", () => show("s2"));
+  document.querySelector(".scanner").addEventListener("click", () => { OM.toast("QR detected · Surya ♥ Priya", "ok"); setTimeout(() => show("s2"), 500); });
+  document.querySelectorAll("[data-back]").forEach(b => b.addEventListener("click", () => show(b.dataset.back)));
+  OM.bindGroup(document.getElementById("quick"), v => setAmt(+v));
+  OM.bindGroup(document.getElementById("upi"));
+  amt.addEventListener("focus", () => (amt.value = amount || ""));
+  amt.addEventListener("input", () => { amt.value = amt.value.replace(/\D/g, "").slice(0, 7); document.querySelectorAll("#quick .chip").forEach(c => c.classList.remove("active")); });
+  amt.addEventListener("blur", () => setAmt(+amt.value || 0));
+  document.getElementById("pm").addEventListener("input", e => (e.target.value = e.target.value.replace(/\D/g, "").slice(0, 10)));
+
+  payBtn.addEventListener("click", () => {
+    if (!/^[6-9]\d{9}$/.test(document.getElementById("pm").value)) { OM.toast("Enter your 10-digit mobile number", "err"); document.getElementById("pm").focus(); return; }
+    if (amount < 1) { OM.toast("Enter a Moi amount", "err"); return; }
+    show("s3");
+    setTimeout(() => (document.getElementById("bar").style.width = "100%"), 50);
+    setTimeout(() => { document.getElementById("paidAmt").textContent = OM.inr(amount); show("s4"); }, 2700);
+  });
+});
+</script>
+</body>
+</html>

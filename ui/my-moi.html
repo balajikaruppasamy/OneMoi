@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#8E1B3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<title>My Moi · OneMoi</title>
+<link rel="icon" href="../brand/logo-mark.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/moi.css">
+<script src="assets/js/app.js"></script>
+<style>
+  .month { font-size: .78rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; padding: 16px 4px 8px; }
+  .entry { display: flex; gap: 14px; align-items: center; padding: 14px 16px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border); cursor: pointer; transition: transform .1s, box-shadow .15s; }
+  .entry:hover { box-shadow: var(--shadow); }
+  .entry + .entry { margin-top: 8px; }
+  .entry .date { width: 48px; text-align: center; flex: none; }
+  .entry .date b { display: block; font-size: 1.25rem; line-height: 1; }
+  .entry .date span { font-size: .7rem; color: var(--muted); font-weight: 700; text-transform: uppercase; }
+  .vendor-row { display: flex; align-items: center; gap: 12px; }
+  .vendor-row + .vendor-row { margin-top: 14px; }
+  .hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+  .hero-stats div { background: rgba(255,249,240,.1); border-radius: 14px; padding: 10px 12px; }
+  .hero-stats b { display: block; font-size: 1.15rem; }
+  .hero-stats span { font-size: .72rem; opacity: .75; font-weight: 600; }
+</style>
+</head>
+<body data-shell="individual" data-page="my-moi" data-title="My Moi" data-crumb="வணக்கம், Ram 👋">
+<main class="content">
+  <div class="alert ok mb-4 hide" id="welcome"><span data-icon="sparkle"></span><div><b>Welcome to OneMoi!</b> We found <b>2 Moi records</b> already linked to your mobile number by Moi vendors. They're shown below.</div></div>
+
+  <div class="grid grid-main">
+    <div class="stack">
+      <!-- Hero total -->
+      <div class="hero-card">
+        <div class="row between">
+          <div>
+            <div class="small muted" id="periodLbl">Total Moi given · 2026</div>
+            <div class="money" style="font-size:2.6rem;margin-top:4px" id="total">₹6,000</div>
+          </div>
+          <a class="btn btn-gold btn-sm" href="pay.html"><span data-icon="scan"></span>Pay Moi</a>
+        </div>
+        <div class="hero-stats">
+          <div><b id="sFunctions">2</b><span>Functions</span></div>
+          <div><b id="sVendors">2</b><span>Moi vendors</span></div>
+          <div><b id="sAvg">₹3,000</b><span>Average</span></div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="chips scroll" id="years">
+        <button class="chip active" data-value="2026">2026</button>
+        <button class="chip" data-value="2025">2025</button>
+        <button class="chip" data-value="2024">2024</button>
+        <button class="chip" data-value="all">All time</button>
+      </div>
+      <div class="row">
+        <div class="input-group grow"><span class="addon" data-icon="search" style="width:44px;justify-content:center"></span><input class="input" id="q" placeholder="Search function, host or place"></div>
+        <select class="select" id="vendor" style="width:auto;min-width:150px">
+          <option value="">All vendors</option><option>JD Moi Tech</option><option>Meenakshi Moi</option><option>Sri Murugan Moi</option><option>Direct (UPI)</option>
+        </select>
+      </div>
+
+      <!-- Timeline -->
+      <div id="list"></div>
+      <div class="empty card hide" id="empty">
+        <div class="empty-art" data-icon="wallet"></div>
+        <h3>No Moi found</h3>
+        <p>Try a different year or vendor. Moi recorded with your mobile number by any vendor appears here automatically.</p>
+      </div>
+    </div>
+
+    <!-- Side panel -->
+    <div class="stack">
+      <div class="card">
+        <div class="card-head"><h3>By Moi vendor</h3><span class="badge" id="vendorPeriod">2026</span></div>
+        <div class="card-body" id="byVendor"></div>
+      </div>
+      <div class="card card-pad center">
+        <h3>My Moi QR</h3>
+        <p class="small muted mt-1">Show this at any counter for instant entry. No need to spell your name.</p>
+        <div class="qr" style="margin:16px auto" id="myQr"></div>
+        <div class="row" style="justify-content:center"><span class="badge brand">OM-RK-7Q2X</span><span class="badge green"><span class="dot"></span>Verified</span></div>
+      </div>
+      <div class="alert"><span data-icon="shield"></span><div class="small">Vendors only see Moi given at <b>their own</b> functions. Only you can see this combined history.</div></div>
+    </div>
+  </div>
+
+  <!-- Entry detail sheet -->
+  <div class="modal-backdrop" id="detail">
+    <div class="modal" style="max-width:460px">
+      <div class="modal-head"><h3>Moi receipt</h3><button class="btn btn-ghost btn-icon btn-sm" data-close data-icon="x"></button></div>
+      <div class="modal-body stack" id="detailBody"></div>
+      <div class="modal-foot"><button class="btn btn-outline" data-close><span data-icon="share"></span>Share</button><button class="btn btn-primary" data-close><span data-icon="download"></span>Download</button></div>
+    </div>
+  </div>
+</main>
+
+<script>
+const DATA = [
+  { d: "2026-09-14", fn: "Manikandan Keda Vettu", type: "Keda Vettu", host: "Manikandan family", place: "Kinathukadavu", vendor: "JD Moi Tech", amt: 1000, mode: "Cash", rc: "JDM-0412-0087" },
+  { d: "2026-08-24", fn: "Arun weds Divya", type: "Marriage", host: "Arun (friend)", place: "Sri Vari Mahal, Pollachi", vendor: "Meenakshi Moi", amt: 5000, mode: "UPI", rc: "MKM-2208-0331" },
+  { d: "2025-11-30", fn: "Kumar Housewarming", type: "Housewarming", host: "Kumar S", place: "Saravanampatti", vendor: "Sri Murugan Moi", amt: 2001, mode: "Cash", rc: "SMM-1130-0045" },
+  { d: "2025-06-08", fn: "Surya weds Priya", type: "Marriage", host: "Surya R", place: "KPR Mahal, Coimbatore", vendor: "JD Moi Tech", amt: 10001, mode: "Cash", rc: "JDM-0608-0912" },
+  { d: "2025-02-16", fn: "Baby Kavin Ear Piercing", type: "Ear Piercing", host: "Ravi & Meena", place: "Palani", vendor: "Direct (UPI)", amt: 501, mode: "UPI", rc: "OM-0216-1120" },
+  { d: "2024-12-01", fn: "Muthu Keda Vettu", type: "Keda Vettu", host: "Muthu", place: "Udumalpet", vendor: "Meenakshi Moi", amt: 3000, mode: "Cash", rc: "MKM-1201-0019" },
+  { d: "2024-05-19", fn: "Ravi Marriage", type: "Marriage", host: "Ravi K", place: "Tiruppur", vendor: "JD Moi Tech", amt: 5000, mode: "UPI", rc: "JDM-0519-0601" }
+];
+const TYPE_ICON = { Marriage: "gift", "Keda Vettu": "sparkle", Housewarming: "home", "Ear Piercing": "sparkle" };
+const VENDOR_TONE = { "JD Moi Tech": "brand", "Meenakshi Moi": "gold", "Sri Murugan Moi": "blue", "Direct (UPI)": "green" };
+const M = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+let year = "2026";
+
+function render() {
+  const q = document.getElementById("q").value.toLowerCase(), v = document.getElementById("vendor").value;
+  const rows = DATA.filter(r => (year === "all" || r.d.startsWith(year)) && (!v || r.vendor === v) && (!q || (r.fn + r.host + r.place).toLowerCase().includes(q)));
+  const total = rows.reduce((s, r) => s + r.amt, 0);
+  const vendors = [...new Set(rows.map(r => r.vendor))];
+  document.getElementById("total").textContent = OM.inr(total);
+  document.getElementById("periodLbl").textContent = "Total Moi given · " + (year === "all" ? "All time" : year);
+  document.getElementById("vendorPeriod").textContent = year === "all" ? "All time" : year;
+  document.getElementById("sFunctions").textContent = rows.length;
+  document.getElementById("sVendors").textContent = vendors.length;
+  document.getElementById("sAvg").textContent = rows.length ? OM.inr(Math.round(total / rows.length)) : "—";
+
+  let html = "", lastMonth = "";
+  rows.forEach((r, i) => {
+    const dt = new Date(r.d), mk = M[dt.getMonth()] + " " + dt.getFullYear();
+    if (mk !== lastMonth) { html += '<div class="month">' + mk + "</div>"; lastMonth = mk; }
+    html += '<div class="entry" data-i="' + DATA.indexOf(r) + '">' +
+      '<div class="date"><b>' + dt.getDate() + "</b><span>" + M[dt.getMonth()] + "</span></div>" +
+      '<div class="icon-tile ' + (VENDOR_TONE[r.vendor] === "brand" ? "" : VENDOR_TONE[r.vendor]) + ' hide-mobile">' + OM.icon(TYPE_ICON[r.type] || "gift") + "</div>" +
+      '<div class="grow"><div style="font-weight:750">' + r.fn + '</div><div class="small muted">' + r.place + "</div>" +
+      '<div class="row mt-1" style="gap:6px"><span class="badge ' + VENDOR_TONE[r.vendor] + '">via ' + r.vendor + '</span><span class="badge">' + r.mode + "</span></div></div>" +
+      '<div class="money" style="font-size:1.15rem">' + OM.inr(r.amt) + "</div></div>";
+  });
+  document.getElementById("list").innerHTML = html;
+  document.getElementById("empty").classList.toggle("hide", rows.length > 0);
+
+  const byV = vendors.map(n => ({ n, s: rows.filter(r => r.vendor === n).reduce((a, r) => a + r.amt, 0), c: rows.filter(r => r.vendor === n).length })).sort((a, b) => b.s - a.s);
+  document.getElementById("byVendor").innerHTML = byV.length ? byV.map(x =>
+    '<div class="vendor-row"><div class="avatar sm ' + (VENDOR_TONE[x.n] === "gold" ? "" : VENDOR_TONE[x.n]) + '">' + x.n.split(" ").map(w => w[0]).join("").slice(0, 2) + '</div><div class="grow"><div class="row between"><b class="small">' + x.n + '</b><b class="small num">' + OM.inr(x.s) + '</b></div><div class="progress mt-1"><span style="width:' + Math.round(x.s / total * 100) + '%"></span></div><div class="xs muted mt-1">' + x.c + " function" + (x.c > 1 ? "s" : "") + "</div></div></div>"
+  ).join("") : '<p class="small muted">No records</p>';
+}
+
+function openDetail(i) {
+  const r = DATA[i], dt = new Date(r.d);
+  document.getElementById("detailBody").innerHTML =
+    '<div class="center"><div class="xs muted" style="font-weight:700">MOI AMOUNT</div><div class="money" style="font-size:2.4rem;color:var(--brand)">' + OM.inr(r.amt) + '</div><span class="badge green"><span class="dot"></span>Recorded</span></div>' +
+    '<div class="card"><div class="list">' +
+    [["Function", r.fn], ["Type", r.type], ["Host", r.host], ["Venue", r.place], ["Date", dt.getDate() + " " + M[dt.getMonth()] + " " + dt.getFullYear()], ["Moi vendor", r.vendor], ["Payment", r.mode], ["Receipt no.", r.rc]]
+      .map(([k, v]) => '<div class="list-item" style="padding:10px 16px"><span class="muted small grow">' + k + '</span><b class="small">' + v + "</b></div>").join("") +
+    "</div></div>";
+  OM.openModal("detail");
+}
+
+// Tiny decorative QR (placeholder — real one generated server-side as a signed token)
+function fakeQr(el) {
+  let s = '<svg viewBox="0 0 25 25" shape-rendering="crispEdges">', seed = 7;
+  const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+  const finder = (x, y) => '<rect x="' + x + '" y="' + y + '" width="7" height="7" fill="#24161B"/><rect x="' + (x + 1) + '" y="' + (y + 1) + '" width="5" height="5" fill="#fff"/><rect x="' + (x + 2) + '" y="' + (y + 2) + '" width="3" height="3" fill="#8E1B3A"/>';
+  for (let y = 0; y < 25; y++) for (let x = 0; x < 25; x++) {
+    const inF = (x < 8 && y < 8) || (x > 16 && y < 8) || (x < 8 && y > 16);
+    if (!inF && rnd() > .52) s += '<rect x="' + x + '" y="' + y + '" width="1" height="1" fill="#24161B"/>';
+  }
+  s += finder(0, 0) + finder(18, 0) + finder(0, 18) + "</svg>";
+  el.innerHTML = s;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (location.search.includes("welcome")) document.getElementById("welcome").classList.remove("hide");
+  OM.bindGroup(document.getElementById("years"), v => { year = v; render(); });
+  document.getElementById("q").addEventListener("input", render);
+  document.getElementById("vendor").addEventListener("change", render);
+  document.getElementById("list").addEventListener("click", e => { const en = e.target.closest(".entry"); if (en) openDetail(+en.dataset.i); });
+  fakeQr(document.getElementById("myQr"));
+  render();
+});
+</script>
+</body>
+</html>

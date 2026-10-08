@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#8E1B3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<title>Reports · OneMoi</title>
+<link rel="icon" href="../brand/logo-mark.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/moi.css">
+<script src="assets/js/app.js"></script>
+<style>
+  .rtype { display: flex; gap: 12px; align-items: center; padding: 14px; border-radius: 16px; border: 1.5px solid var(--border); background: var(--surface); cursor: pointer; text-align: left; font: inherit; color: inherit; }
+  .rtype.active { border-color: var(--brand); background: var(--brand-soft); }
+  .rtype .icon-tile { width: 38px; height: 38px; border-radius: 12px; }
+</style>
+</head>
+<body data-shell="vendor" data-page="reports" data-title="Reports" data-crumb="JD Moi Tech"
+      data-top-action='<div class="row hide-mobile" style="gap:8px"><button class="btn btn-outline btn-sm" onclick="OM.toast(&apos;Excel export started&apos;,&apos;ok&apos;)">Excel</button><button class="btn btn-primary btn-sm" onclick="OM.toast(&apos;PDF report generated&apos;,&apos;ok&apos;)">PDF</button></div>'>
+<main class="content">
+  <div class="card card-pad">
+    <div class="grid grid-4" style="gap:12px">
+      <div class="field"><label class="label">Function</label><select class="select"><option>Surya ♥ Priya</option><option>Manikandan Keda Vettu</option><option>Kavya Ear Piercing</option><option>All functions</option></select></div>
+      <div class="field"><label class="label">Date range</label><select class="select"><option>Today</option><option>Last 7 days</option><option>This month</option><option>Custom…</option></select></div>
+      <div class="field"><label class="label">Counter / Operator</label><select class="select"><option>All counters</option><option>Counter 1 · Arun</option><option>Counter 2 · Bala</option><option>Counter 3 · Chitra</option></select></div>
+      <div class="field"><label class="label">Payment mode</label><select class="select"><option>Cash + UPI</option><option>Cash only</option><option>UPI only</option></select></div>
+    </div>
+  </div>
+
+  <div class="grid grid-3 mt-4" id="types" style="gap:10px">
+    <button class="rtype active"><span class="icon-tile" data-icon="users"></span><div><b>Guest-wise</b><div class="xs muted">Every Moi, A–Z or by amount</div></div></button>
+    <button class="rtype"><span class="icon-tile gold" data-icon="receipt"></span><div><b>Counter-wise</b><div class="xs muted">Totals per counter</div></div></button>
+    <button class="rtype"><span class="icon-tile blue" data-icon="user"></span><div><b>Operator-wise</b><div class="xs muted">Entries, speed, cash in hand</div></div></button>
+    <button class="rtype"><span class="icon-tile green" data-icon="cash"></span><div><b>Cash report</b><div class="xs muted">Denomination &amp; handover</div></div></button>
+    <button class="rtype"><span class="icon-tile green" data-icon="upi"></span><div><b>Digital / UPI</b><div class="xs muted">Bank-confirmed, pending, failed</div></div></button>
+    <button class="rtype"><span class="icon-tile" data-icon="file"></span><div><b>Host summary</b><div class="xs muted">Printable Moi book for family</div></div></button>
+  </div>
+
+  <div class="grid grid-4 mt-4">
+    <div class="stat"><div class="stat-label">Total collected</div><div class="stat-value">₹2,84,500</div></div>
+    <div class="stat"><div class="stat-label">Entries</div><div class="stat-value">318</div></div>
+    <div class="stat"><div class="stat-label">Cash</div><div class="stat-value">₹2,01,995</div></div>
+    <div class="stat"><div class="stat-label">UPI (bank confirmed)</div><div class="stat-value">₹82,505</div></div>
+  </div>
+
+  <div class="card mt-4">
+    <div class="card-head">
+      <h3>Guest-wise · Surya ♥ Priya</h3>
+      <div class="row" style="gap:8px"><div class="input-group hide-mobile" style="width:240px"><input class="input" placeholder="Search name / place" style="min-height:38px"></div>
+        <button class="btn btn-outline btn-sm hide-desktop" onclick="OM.toast('Export started','ok')"><span data-icon="download"></span>Export</button></div>
+    </div>
+    <div class="table-wrap">
+      <table class="table table-stack">
+        <thead><tr><th>#</th><th>Guest</th><th>Place</th><th>Mobile</th><th>Counter</th><th>Time</th><th>Mode</th><th class="r">Amount</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="card-foot row between small"><span class="muted">Showing 1–10 of 318 · Mobile numbers are masked for privacy</span><div class="row" style="gap:6px"><button class="btn btn-outline btn-sm">Prev</button><button class="btn btn-outline btn-sm">Next</button></div></div>
+  </div>
+</main>
+<script>
+const G = [["Ram Kumar","Pollachi",1001,"Cash"],["Lakshmi S","Tiruppur",2001,"Cash"],["Senthil V","Udumalpet",501,"UPI"],["Meena R","Coimbatore",5001,"Cash"],["Karthik P","Erode",1001,"UPI"],["Saranya M","Palani",1001,"Cash"],["Vignesh K","Salem",10001,"Cash"],["Anitha J","Karur",2001,"UPI"],["Murugesan T","Pollachi",501,"Cash"],["Kavitha B","Coimbatore",3001,"Cash"]];
+document.addEventListener("DOMContentLoaded", () => {
+  OM.bindGroup(document.getElementById("types"));
+  document.getElementById("rows").innerHTML = G.map((g, i) =>
+    '<tr><td data-label="#" class="muted num">' + (i + 1) + '</td><td data-label="Guest"><b>' + g[0] + '</b></td><td data-label="Place">' + g[1] + '</td>' +
+    '<td data-label="Mobile" class="num muted">9' + (i % 9) + '••• ••' + (210 + i * 13) + '</td><td data-label="Counter">C' + (i % 3 + 1) + '</td>' +
+    '<td data-label="Time" class="num">' + (9 + Math.floor(i / 3)) + ':' + String(10 + i * 4).padStart(2, "0") + '</td>' +
+    '<td data-label="Mode"><span class="badge ' + (g[3] === "UPI" ? "green" : "gold") + '">' + g[3] + '</span></td><td data-label="Amount" class="r money">' + OM.inr(g[2]) + '</td></tr>').join("");
+});
+</script>
+</body>
+</html>

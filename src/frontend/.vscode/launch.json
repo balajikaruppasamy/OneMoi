@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "OneMoi Web (F5)",
+      "type": "chrome",
+      "request": "launch",
+      "preLaunchTask": "ng serve",
+      "url": "http://localhost:4200",
+      "webRoot": "${workspaceFolder}/onemoi-web"
+    }
+  ]
+}

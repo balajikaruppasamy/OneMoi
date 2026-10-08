@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#8E1B3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<title>Functions · OneMoi</title>
+<link rel="icon" href="../brand/logo-mark.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/moi.css">
+<script src="assets/js/app.js"></script>
+<style>
+  .qty { display: flex; align-items: center; border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; width: max-content; }
+  .qty button { width: 44px; height: 46px; border: 0; background: var(--surface-2); font-size: 1.2rem; font-weight: 800; color: var(--text); cursor: pointer; }
+  .qty output { width: 56px; text-align: center; font-weight: 800; font-size: 1.1rem; }
+  .code-box { font-size: 1.6rem; font-weight: 800; letter-spacing: .25em; color: var(--brand); }
+</style>
+</head>
+<body data-shell="vendor" data-page="functions" data-title="Functions" data-crumb="JD Moi Tech"
+      data-top-action='<button class="btn btn-primary btn-sm" data-open="create"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span class="hide-mobile">New function</span></button>'>
+<main class="content">
+  <div class="tabs" id="tabs">
+    <button class="active" data-value="all">All <span class="count">9</span></button>
+    <button data-value="Live">Live <span class="count">3</span></button>
+    <button data-value="Upcoming">Upcoming <span class="count">4</span></button>
+    <button data-value="Closed">Closed <span class="count">1</span></button>
+    <button data-value="Draft">Draft <span class="count">1</span></button>
+  </div>
+
+  <div class="row mt-4 wrap">
+    <div class="input-group grow" style="min-width:220px"><span class="addon" data-icon="search" style="width:44px;justify-content:center"></span><input class="input" id="q" placeholder="Search by function, host, venue or code"></div>
+    <select class="select" style="width:auto"><option>All types</option><option>Marriage</option><option>Keda Vettu</option><option>Housewarming</option><option>Ear Piercing</option><option>Birthday</option></select>
+    <input class="input" type="month" value="2026-10" style="width:auto">
+  </div>
+
+  <div class="card mt-4">
+    <div class="table-wrap">
+      <table class="table table-stack">
+        <thead><tr><th>Function</th><th>Date</th><th>Code</th><th>Counters</th><th class="r">Collected</th><th>Status</th><th></th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Create function -->
+  <div class="modal-backdrop" id="create">
+    <div class="modal">
+      <div class="modal-head"><div><h2>Create function</h2><div class="small muted">A function code and QR are generated automatically</div></div><button class="btn btn-ghost btn-icon btn-sm" data-close data-icon="x"></button></div>
+      <div class="modal-body stack">
+        <div class="field"><label class="label">Function type <span class="req">*</span></label>
+          <div class="chips" id="ftype">
+            <button class="chip active">Marriage</button><button class="chip">Keda Vettu</button><button class="chip">Housewarming</button>
+            <button class="chip">Ear Piercing</button><button class="chip">Birthday</button><button class="chip">Puberty</button><button class="chip">Other</button>
+          </div></div>
+        <div class="field"><label class="label" for="fname">Function name <span class="req">*</span></label><input class="input" id="fname" placeholder="e.g. Surya ♥ Priya Wedding"></div>
+        <div class="grid grid-3" style="gap:12px">
+          <div class="field"><label class="label">Date <span class="req">*</span></label><input class="input" type="date" value="2026-10-12"></div>
+          <div class="field"><label class="label">Start</label><input class="input" type="time" value="06:00"></div>
+          <div class="field"><label class="label">End</label><input class="input" type="time" value="14:00"></div>
+        </div>
+        <div class="field"><label class="label">Venue / Mandapam <span class="req">*</span></label><input class="input" placeholder="KPR Mahal, Avinashi Road, Coimbatore"></div>
+        <div class="grid grid-2" style="gap:12px">
+          <div class="field"><label class="label">Host name <span class="req">*</span></label><input class="input" placeholder="Surya R"></div>
+          <div class="field"><label class="label">Host mobile</label><div class="input-group"><span class="addon">+91</span><input class="input" type="tel" inputmode="numeric" maxlength="10" placeholder="Gets live report"></div></div>
+        </div>
+        <div class="grid grid-2" style="gap:12px">
+          <div class="field"><label class="label">Expected guests</label><input class="input" type="number" inputmode="numeric" placeholder="800"></div>
+          <div class="field"><label class="label">Counters</label>
+            <div class="qty"><button type="button" id="minus">−</button><output id="ctr">3</output><button type="button" id="plus">+</button></div>
+            <span class="hint" id="ctrHint">≈ 270 guests per counter</span></div>
+        </div>
+        <div class="field"><span class="label">Accept Moi via</span>
+          <div class="grid grid-2" style="gap:10px">
+            <label class="check card" style="padding:12px"><input type="checkbox" checked> <span><b>Cash at counter</b><br><span class="xs muted">Operator entry + printed receipt</span></span></label>
+            <label class="check card" style="padding:12px"><input type="checkbox" checked> <span><b>UPI / QR</b><br><span class="xs muted">Settles directly to host account</span></span></label>
+          </div></div>
+        <div class="grid grid-2" style="gap:10px">
+          <label class="check"><input type="checkbox" checked> SMS / WhatsApp receipt to guest</label>
+          <label class="check"><input type="checkbox" checked> Share live report with host</label>
+        </div>
+        <div class="card card-pad row" style="background:var(--surface-2);border-style:dashed">
+          <div class="qr" style="width:84px;padding:6px" id="qrPrev"></div>
+          <div class="grow"><div class="xs muted" style="font-weight:700">FUNCTION CODE (preview)</div><div class="code-box">SP7K2Q</div><div class="xs muted">onemoi.in/f/SP7K2Q · print on banner &amp; invitation</div></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-outline" data-close>Save as draft</button>
+        <button class="btn btn-primary" id="createBtn">Create &amp; assign operators</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+const FNS = [
+  ["Surya ♥ Priya", "Marriage", "05 Oct 2026", "SP4M8A", 3, 284500, "Live"],
+  ["Manikandan Keda Vettu", "Keda Vettu", "05 Oct 2026", "MK2V7T", 3, 121350, "Live"],
+  ["Kavya Ear Piercing", "Ear Piercing", "05 Oct 2026", "KE9P3L", 3, 76500, "Live"],
+  ["Gokul Housewarming", "Housewarming", "08 Oct 2026", "GH5W1N", 2, 0, "Upcoming"],
+  ["Deepak ♥ Nithya", "Marriage", "12 Oct 2026", "DN8R4C", 4, 0, "Upcoming"],
+  ["Senthil 60th Birthday", "Birthday", "15 Oct 2026", "SB6T2J", 1, 0, "Upcoming"],
+  ["Prakash ♥ Swetha", "Marriage", "26 Oct 2026", "PS3H9X", 3, 0, "Upcoming"],
+  ["Ramesh Keda Vettu", "Keda Vettu", "28 Sep 2026", "RK1D6F", 2, 168200, "Closed"],
+  ["Untitled function", "Other", "—", "—", 0, 0, "Draft"]
+];
+const TONE = { Live: "green live", Upcoming: "blue", Closed: "", Draft: "gold" };
+let tab = "all";
+function render() {
+  const q = document.getElementById("q").value.toLowerCase();
+  document.getElementById("rows").innerHTML = FNS.filter(f => (tab === "all" || f[6] === tab) && (!q || f.join(" ").toLowerCase().includes(q))).map(f =>
+    '<tr><td data-label="Function"><div><b>' + f[0] + '</b><div class="xs muted">' + f[1] + '</div></div></td><td data-label="Date">' + f[2] + '</td>' +
+    '<td data-label="Code"><span class="badge brand num">' + f[3] + '</span></td><td data-label="Counters">' + f[4] + '</td>' +
+    '<td data-label="Collected" class="r money">' + (f[5] ? OM.inr(f[5]) : "—") + '</td>' +
+    '<td data-label="Status"><span class="badge ' + TONE[f[6]] + '">' + (f[6] === "Live" ? '<span class="dot"></span>' : "") + f[6] + '</span></td>' +
+    '<td class="r" data-label=""><a class="btn btn-ghost btn-sm" href="' + (f[6] === "Live" ? "operators.html" : "#") + '">Open ' + OM.icon("chevron") + '</a></td></tr>'
+  ).join("") || '<tr><td colspan="7"><div class="empty"><div class="empty-art">' + OM.icon("calendar") + '</div><h3>No functions here</h3><p>Create a function to get its code and QR, then assign operators.</p></div></td></tr>';
+}
+document.addEventListener("DOMContentLoaded", () => {
+  OM.bindGroup(document.getElementById("tabs"), v => { tab = v; render(); });
+  OM.bindGroup(document.getElementById("ftype"));
+  document.getElementById("q").addEventListener("input", render);
+  let c = 3; const out = document.getElementById("ctr"), hint = document.getElementById("ctrHint");
+  const upd = () => { out.textContent = c; hint.textContent = "≈ " + Math.round(800 / c) + " guests per counter"; };
+  document.getElementById("minus").onclick = () => { c = Math.max(1, c - 1); upd(); };
+  document.getElementById("plus").onclick = () => { c = Math.min(12, c + 1); upd(); };
+  document.getElementById("qrPrev").innerHTML = '<svg viewBox="0 0 7 7" shape-rendering="crispEdges"><path d="M0 0h3v3H0zM4 0h3v3H4zM0 4h3v3H0zM4 4h1v1H4zM6 4h1v1H6zM5 5h1v1H5zM4 6h1v1H4zM6 6h1v1H6z" fill="#24161B"/><path d="M1 1h1v1H1zM5 1h1v1H5zM1 5h1v1H1z" fill="#8E1B3A"/></svg>';
+  document.getElementById("createBtn").onclick = () => { OM.toast("Function created · Code SP7K2Q", "ok"); setTimeout(() => (location.href = "operators.html"), 800); };
+  if (location.search.includes("new")) OM.openModal("create");
+  render();
+});
+</script>
+</body>
+</html>

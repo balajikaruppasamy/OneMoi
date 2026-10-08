@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 120" width="460" height="120" role="img" aria-label="OneMoi">
+  <defs>
+    <linearGradient id="omBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#A8264F"/>
+      <stop offset="1" stop-color="#6A0F28"/>
+    </linearGradient>
+    <linearGradient id="omCoin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFC94A"/>
+      <stop offset="1" stop-color="#E08E00"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="28" fill="url(#omBg)"/>
+  <g fill="#F2A516" opacity=".55"><circle cx="20" cy="20" r="2.4"/><circle cx="100" cy="20" r="2.4"/><circle cx="20" cy="100" r="2.4"/><circle cx="100" cy="100" r="2.4"/></g>
+  <rect x="22" y="34" width="76" height="56" rx="10" fill="#FFF9F0"/>
+  <path d="M34 80V48l26 20 26-20v32" fill="none" stroke="#8E1B3A" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="60" cy="68" r="13" fill="url(#omCoin)" stroke="#FFF9F0" stroke-width="3.5"/>
+  <path d="M55 62.5h10M55 66h10M55 62.5h3.2a3.6 3.6 0 0 1 0 7.2H55l7 6" fill="none" stroke="#6A0F28" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="142" y="70" font-family="'Plus Jakarta Sans','Segoe UI',Arial,sans-serif" font-size="50" font-weight="800" letter-spacing="-1.5">
+    <tspan fill="#8E1B3A">One</tspan><tspan fill="#E39A00">Moi</tspan>
+  </text>
+  <text x="144" y="100" font-family="'Noto Sans Tamil','Latha','Nirmala UI',sans-serif" font-size="17" font-weight="600" fill="#6F5F64">ஒரே மொய் அடையாளம் · One Mobile. One Moi Identity.</text>
+</svg>

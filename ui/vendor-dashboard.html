@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#8E1B3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<title>Dashboard · OneMoi</title>
+<link rel="icon" href="../brand/logo-mark.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/moi.css">
+<script src="assets/js/app.js"></script>
+<style>
+  .fn-card { padding: 18px; border-radius: 22px; background: var(--surface); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 14px; }
+  .fn-card .counters { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .fn-card .ctr { padding: 10px; border-radius: 12px; background: var(--surface-2); }
+  .fn-card .ctr b { display: block; font-size: .9rem; }
+  .feed-item { display: flex; gap: 12px; align-items: center; padding: 12px 20px; border-bottom: 1px solid var(--border); animation: popIn .3s; }
+  .feed-item:last-child { border-bottom: 0; }
+</style>
+</head>
+<body data-shell="vendor" data-page="dashboard" data-title="Today · Sun, 5 Oct" data-crumb="JD Moi Tech"
+      data-top-action='<a class="btn btn-primary btn-sm hide-mobile" href="functions.html?new=1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>New function</a>'>
+<main class="content">
+  <div class="page-loader"><div class="loader-ring" data-logo="mark" data-size="72" data-animated></div></div>
+
+  <!-- KPIs -->
+  <div class="grid grid-4">
+    <div class="stat"><div class="stat-label"><span class="stat-icon" data-icon="rupee"></span>Collected today</div><div class="stat-value" id="kTotal">₹4,82,350</div><div class="stat-delta">▲ live across 3 functions</div></div>
+    <div class="stat"><div class="stat-label"><span class="stat-icon gold" data-icon="receipt"></span>Entries</div><div class="stat-value" id="kCount">612</div><div class="xs muted">≈ 6.8 sec / entry</div></div>
+    <div class="stat"><div class="stat-label"><span class="stat-icon green" data-icon="cash"></span>Cash · UPI</div><div class="stat-value">71% · 29%</div><div class="progress mt-2"><span style="width:71%"></span></div></div>
+    <div class="stat"><div class="stat-label"><span class="stat-icon blue" data-icon="users"></span>Operators on duty</div><div class="stat-value">9 / 9</div><div class="xs muted">All counters online</div></div>
+  </div>
+
+  <div class="page-head mt-8" style="margin-bottom:12px">
+    <h2>Today's functions</h2>
+    <a class="small" href="functions.html">View all functions →</a>
+  </div>
+
+  <div class="grid grid-3" id="fnGrid"></div>
+
+  <div class="grid grid-main mt-6">
+    <div class="card">
+      <div class="card-head"><h3>Collection by hour</h3><div class="segmented" style="width:auto" id="chartFn"><button class="active">All</button><button>Surya</button><button>Mani</button><button>Kavya</button></div></div>
+      <div class="card-body">
+        <div class="bars" id="bars"></div>
+        <div class="row mt-3 small muted"><span class="badge gold">Peak</span>11 AM: muhurtham rush. Consider opening a 4th counter next time.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Live entries</h3><span class="badge green live"><span class="dot"></span>Live</span></div>
+      <div id="feed" style="max-height:340px;overflow:auto"></div>
+    </div>
+  </div>
+
+  <div class="card mt-6">
+    <div class="card-head"><h3>Counter performance</h3><a class="btn btn-ghost btn-sm" href="reports.html"><span data-icon="download"></span>Export</a></div>
+    <div class="table-wrap">
+      <table class="table table-stack">
+        <thead><tr><th>Function</th><th>Counter</th><th>Operator</th><th class="r">Entries</th><th class="r">Cash</th><th class="r">UPI</th><th class="r">Total</th><th>Status</th></tr></thead>
+        <tbody id="perf"></tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script>
+const FNS = [
+  { name: "Surya ♥ Priya", type: "Marriage", venue: "KPR Mahal, Coimbatore", time: "6:00 AM – 2:00 PM", total: 284500, count: 318, guests: 800, ops: [["AR","Arun",112,98200],["BM","Bala",104,91800],["CS","Chitra",102,94500]] },
+  { name: "Manikandan Keda Vettu", type: "Keda Vettu", venue: "Kinathukadavu", time: "9:00 AM – 4:00 PM", total: 121350, count: 186, guests: 400, ops: [["DN","Dinesh",71,46200],["ES","Esther",58,38150],["FZ","Faizal",57,37000]] },
+  { name: "Kavya Ear Piercing", type: "Ear Piercing", venue: "Palani Temple Hall", time: "10:00 AM – 1:00 PM", total: 76500, count: 108, guests: 250, ops: [["GN","Ganesh",40,28500],["HR","Hari",36,25000],["IN","Indhu",32,23000]] }
+];
+const NAMES = ["Ram Kumar · Pollachi","Lakshmi S · Tiruppur","Senthil V · Udumalpet","Meena R · Coimbatore","Karthik P · Erode","Saranya M · Palani","Vignesh K · Salem","Anitha J · Karur"];
+const AMTS = [501, 1001, 1001, 2001, 501, 5001, 1001, 3001, 10001];
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("fnGrid").innerHTML = FNS.map((f, i) => {
+    const pct = Math.round(f.count / f.guests * 100);
+    return '<div class="fn-card">' +
+      '<div class="row between"><span class="badge green live"><span class="dot"></span>Live</span><span class="badge">' + f.type + '</span></div>' +
+      '<div><h3>' + f.name + '</h3><div class="small muted row mt-1" style="gap:6px">' + OM.icon("pin", "") .replace("<svg", '<svg style="width:14px;height:14px"') + f.venue + '</div><div class="xs muted mt-1">' + f.time + '</div></div>' +
+      '<div class="row between"><div><div class="xs muted" style="font-weight:700">COLLECTED</div><div class="money" style="font-size:1.5rem">' + OM.inr(f.total) + '</div></div><div class="center"><div class="xs muted" style="font-weight:700">ENTRIES</div><div class="money" style="font-size:1.5rem">' + f.count + '</div></div></div>' +
+      '<div><div class="row between xs muted" style="font-weight:700"><span>Guests covered</span><span>' + pct + '% of ~' + f.guests + '</span></div><div class="progress mt-1"><span style="width:' + pct + '%"></span></div></div>' +
+      '<div class="counters">' + f.ops.map((o, k) => '<div class="ctr"><div class="xs muted">Counter ' + (k + 1) + '</div><b>' + o[1] + '</b><div class="xs muted num">' + o[2] + ' · ' + OM.inr(o[3]) + '</div></div>').join("") + '</div>' +
+      '<div class="row"><a class="btn btn-outline btn-sm grow" href="operators.html">' + OM.icon("users") + 'Operators</a><a class="btn btn-primary btn-sm grow" href="reports.html">' + OM.icon("chart") + 'Live report</a></div>' +
+      '</div>';
+  }).join("");
+
+  const hours = [["6a",8],["7a",22],["8a",41],["9a",63],["10a",88],["11a",100],["12p",74],["1p",46],["2p",28],["3p",14]];
+  document.getElementById("bars").innerHTML = hours.map(h => '<div class="bar ' + (h[1] === 100 ? "peak" : "") + '"><span style="height:' + h[1] + '%"></span><small>' + h[0] + '</small></div>').join("");
+  OM.bindGroup(document.getElementById("chartFn"), () => {
+    document.querySelectorAll("#bars .bar span").forEach(s => (s.style.height = (15 + Math.random() * 85) + "%"));
+  });
+
+  document.getElementById("perf").innerHTML = FNS.flatMap(f => f.ops.map((o, k) => {
+    const cash = Math.round(o[3] * .71), upi = o[3] - cash;
+    return '<tr><td data-label="Function"><b>' + f.name + '</b></td><td data-label="Counter">Counter ' + (k + 1) + '</td><td data-label="Operator"><div class="row" style="gap:8px;justify-content:flex-end"><div class="avatar sm">' + o[0] + '</div>' + o[1] + '</div></td>' +
+      '<td data-label="Entries" class="r num">' + o[2] + '</td><td data-label="Cash" class="r num">' + OM.inr(cash) + '</td><td data-label="UPI" class="r num">' + OM.inr(upi) + '</td><td data-label="Total" class="r money">' + OM.inr(o[3]) + '</td>' +
+      '<td data-label="Status"><span class="badge green"><span class="dot"></span>Online</span></td></tr>';
+  })).join("");
+
+  // Live feed simulation
+  const feed = document.getElementById("feed");
+  let total = 482350, count = 612;
+  function addEntry(initial) {
+    const f = FNS[Math.floor(Math.random() * 3)], o = f.ops[Math.floor(Math.random() * 3)];
+    const n = NAMES[Math.floor(Math.random() * NAMES.length)], a = AMTS[Math.floor(Math.random() * AMTS.length)];
+    const upi = Math.random() > .7;
+    const el = document.createElement("div"); el.className = "feed-item";
+    el.innerHTML = '<div class="icon-tile ' + (upi ? "green" : "gold") + '" style="width:38px;height:38px;border-radius:12px">' + OM.icon(upi ? "upi" : "cash") + '</div>' +
+      '<div class="grow"><div style="font-weight:700" class="small">' + n + '</div><div class="xs muted">' + f.name + ' · ' + o[1] + ' (C' + (f.ops.indexOf(o) + 1) + ')</div></div><b class="num">' + OM.inr(a) + '</b>';
+    feed.prepend(el);
+    if (feed.children.length > 12) feed.lastChild.remove();
+    if (!initial) { total += a; count++; document.getElementById("kTotal").textContent = OM.inr(total); document.getElementById("kCount").textContent = count; }
+  }
+  for (let i = 0; i < 7; i++) addEntry(true);
+  setInterval(() => addEntry(false), 2600);
+});
+</script>
+</body>
+</html>

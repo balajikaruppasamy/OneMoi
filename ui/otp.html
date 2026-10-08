@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#8E1B3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<title>Verify OTP · OneMoi</title>
+<link rel="icon" href="../brand/logo-mark.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/moi.css">
+<script src="assets/js/app.js"></script>
+</head>
+<body>
+<div class="auth">
+  <section class="auth-hero">
+    <div class="on-dark" data-logo data-size="44"></div>
+    <div class="stack">
+      <div class="ta-line">உங்கள் மொய் — உங்களுக்கு மட்டும்</div>
+      <h1>Your history stays private.</h1>
+      <p style="opacity:.8;max-width:44ch">Vendors only see Moi given at <b>their</b> functions. Only you can see your complete history across every vendor.</p>
+      <div class="grid grid-2 mt-6" style="max-width:460px">
+        <div class="ledger-demo" style="padding:14px"><div class="xs" style="color:#7A686E;font-weight:700">JD MOI TECH SEES</div><div style="font-weight:800;margin-top:4px">₹1,000</div><div class="xs" style="color:#7A686E">Their function only</div></div>
+        <div class="ledger-demo" style="padding:14px"><div class="xs" style="color:#7A686E;font-weight:700">RAM SEES</div><div style="font-weight:800;margin-top:4px">₹6,000</div><div class="xs" style="color:#7A686E">All vendors, lifetime</div></div>
+      </div>
+    </div>
+    <div class="row small" style="opacity:.7"><span data-icon="lock" style="width:18px"></span> OTP expires in 5 minutes · Never share it with anyone</div>
+  </section>
+
+  <section class="auth-panel">
+    <div class="auth-box stack">
+      <div class="row between">
+        <a class="btn btn-ghost btn-icon" href="javascript:history.back()" aria-label="Back"><span data-icon="back"></span></a>
+        <button class="btn btn-ghost btn-icon" data-theme-toggle title="Toggle theme"></button>
+      </div>
+
+      <div class="icon-tile" style="width:64px;height:64px;border-radius:20px" data-icon="phone"></div>
+      <div>
+        <h1>Enter verification code</h1>
+        <p class="muted mt-1">We sent a 6-digit code to <b id="num" style="color:var(--text)">+91 98765 43210</b> <a href="login.html" class="small">Change</a></p>
+      </div>
+
+      <form id="otpForm" class="stack" novalidate>
+        <div class="otp" id="otp">
+          <input aria-label="Digit 1"><input aria-label="Digit 2"><input aria-label="Digit 3"><input aria-label="Digit 4"><input aria-label="Digit 5"><input aria-label="Digit 6">
+        </div>
+        <div class="error-text hide" id="err">Incorrect code. 2 attempts left.</div>
+        <div class="row between small">
+          <span class="muted" id="timerWrap">Resend code in <b id="timer" class="num">0:30</b></span>
+          <button type="button" class="btn btn-ghost btn-sm hide" id="resend"><span data-icon="refresh"></span>Resend OTP</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="wa" title="Get code on WhatsApp">Get via WhatsApp</button>
+        </div>
+        <button class="btn btn-primary btn-lg btn-block" id="verify" type="submit" disabled>Verify &amp; Continue</button>
+      </form>
+
+      <div class="alert"><span data-icon="info"></span><div class="small">Demo: any 6 digits work, except <b>000000</b>, which shows the error state. On Android, the SMS code fills in automatically (WebOTP / SMS Retriever).</div></div>
+    </div>
+  </section>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  let mobile = "", role = "individual", flow = "login";
+  try { mobile = sessionStorage.getItem("om-mobile") || ""; role = sessionStorage.getItem("om-role") || role; flow = sessionStorage.getItem("om-flow") || flow; } catch (e) {}
+  if (mobile) document.getElementById("num").textContent = "+91 " + mobile.slice(0, 5) + " " + mobile.slice(5);
+
+  const box = document.getElementById("otp"), btn = document.getElementById("verify"), err = document.getElementById("err");
+  const otp = OM.initOtp(box, () => submit());
+  box.addEventListener("input", () => { btn.disabled = otp.value().length < 6; err.classList.add("hide"); });
+  setTimeout(() => box.querySelector("input").focus(), 100);
+
+  // WebOTP API (Android Chrome / WebView) — auto-read SMS: "Your OneMoi code is 123456 @onemoi.in #123456"
+  if ("OTPCredential" in window) {
+    navigator.credentials.get({ otp: { transport: ["sms"] } }).then(c => { if (c && c.code) { c.code.split("").forEach((d, i) => { const el = box.querySelectorAll("input")[i]; if (el) { el.value = d; el.classList.add("filled"); } }); submit(); } }).catch(() => {});
+  }
+
+  function submit() {
+    if (otp.value().length < 6) return;
+    btn.innerHTML = '<span class="spinner"></span> Verifying…'; btn.disabled = true;
+    setTimeout(() => {
+      if (otp.value() === "000000") {
+        box.classList.add("is-error"); err.classList.remove("hide");
+        btn.textContent = "Verify & Continue"; otp.clear(); return;
+      }
+      box.classList.add("is-ok");
+      OM.toast("Mobile verified", "ok");
+      const dest = role === "vendor" ? "vendor-dashboard.html" : flow === "register" && role === "individual" ? "my-moi.html?welcome=1" : "my-moi.html";
+      setTimeout(() => (location.href = dest), 600);
+    }, 800);
+  }
+  document.getElementById("otpForm").addEventListener("submit", e => { e.preventDefault(); submit(); });
+
+  // Resend timer
+  let left = 30; const t = document.getElementById("timer"), wrap = document.getElementById("timerWrap"), resend = document.getElementById("resend");
+  const tick = setInterval(() => {
+    left--; t.textContent = "0:" + String(left).padStart(2, "0");
+    if (left <= 0) { clearInterval(tick); wrap.classList.add("hide"); resend.classList.remove("hide"); }
+  }, 1000);
+  resend.addEventListener("click", () => { OM.toast("New code sent"); resend.classList.add("hide"); wrap.classList.remove("hide"); left = 30; location.reload(); });
+  document.getElementById("wa").addEventListener("click", () => OM.toast("Code sent on WhatsApp"));
+});
+</script>
+</body>
+</html>

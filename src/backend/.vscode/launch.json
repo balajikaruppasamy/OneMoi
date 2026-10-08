@@ -1,0 +1,24 @@
+﻿{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "OneMoi API (F5)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/OneMoi.Api/bin/Debug/net10.0/OneMoi.Api.dll",
+      "cwd": "${workspaceFolder}/OneMoi.Api",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://localhost:5080"
+      },
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "Now listening on:\\s+(https?://\\S+)",
+        "uriFormat": "%s/swagger"
+      },
+      "console": "integratedTerminal"
+    }
+  ]
+}
+

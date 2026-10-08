@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#8E1B3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<title>Login · OneMoi</title>
+<link rel="icon" href="../brand/logo-mark.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/moi.css">
+<script src="assets/js/app.js"></script>
+</head>
+<body>
+<div class="auth">
+  <!-- Left: brand story (desktop / tablet landscape only) -->
+  <section class="auth-hero">
+    <div class="on-dark" data-logo data-size="44"></div>
+
+    <div class="stack">
+      <div class="ta-line">ஒரே Mobile Number — உங்கள் முழு மொய் வரலாறு</div>
+      <h1>Every Moi you give. Every vendor. One login.</h1>
+      <p style="opacity:.8;max-width:46ch">Moi vendors record at the counter. You see your complete Moi history — across every function and every Moi service — with just your mobile number.</p>
+
+      <div class="ledger-demo mt-6">
+        <div class="row between"><div class="row"><div class="avatar">RK</div><div><div style="font-weight:800">Ram Kumar</div><div class="xs" style="color:#7A686E">+91 98•••• ••210</div></div></div><span class="badge green"><span class="dot"></span>Verified</span></div>
+        <div class="ld-item mt-3">
+          <div class="icon-tile gold" data-icon="gift"></div>
+          <div class="grow"><div style="font-weight:700">Manikandan Keda Vettu</div><div class="xs" style="color:#7A686E">via <b>JD Moi Tech</b> · Cash</div></div>
+          <div class="money">₹1,000</div>
+        </div>
+        <div class="ld-item mt-2">
+          <div class="icon-tile" data-icon="gift"></div>
+          <div class="grow"><div style="font-weight:700">Friend's Marriage</div><div class="xs" style="color:#7A686E">via <b>Meenakshi Moi</b> · UPI</div></div>
+          <div class="money">₹5,000</div>
+        </div>
+        <div class="ld-total"><span>Total Moi given</span><span class="money" style="font-size:1.3rem">₹6,000</span></div>
+      </div>
+    </div>
+
+    <div class="row small" style="opacity:.7"><span data-icon="shield" style="width:18px"></span> OTP secured · Your history is visible only to you</div>
+  </section>
+
+  <!-- Right: form -->
+  <section class="auth-panel">
+    <div class="auth-box stack">
+      <div class="row between">
+        <div class="auth-logo" data-logo data-size="40"></div>
+        <div class="row" style="margin-left:auto;gap:6px">
+          <div class="segmented" style="width:auto" id="lang"><button class="active" data-value="en">EN</button><button data-value="ta" class="ta">த</button></div>
+          <button class="btn btn-ghost btn-icon" data-theme-toggle title="Toggle theme"></button>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <h1 id="hTitle">Welcome back 👋</h1>
+        <p class="muted mt-1" id="hSub">Login with your mobile number to continue.</p>
+      </div>
+
+      <div class="segmented" id="mode">
+        <button class="active" data-value="otp"><span data-icon="phone"></span>Mobile OTP</button>
+        <button data-value="pin"><span data-icon="lock"></span>Operator PIN</button>
+      </div>
+
+      <!-- Mobile OTP login (Individuals, Vendors, Managers) -->
+      <form id="otpForm" class="stack" novalidate>
+        <div class="field">
+          <label class="label" for="mobile">Mobile number</label>
+          <div class="input-group">
+            <span class="addon">+91</span>
+            <input class="input" id="mobile" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="10" placeholder="98765 43210" required>
+          </div>
+          <span class="error-text hide" id="mobileErr">Enter a valid 10-digit mobile number</span>
+        </div>
+        <div class="field">
+          <span class="label">I am logging in as</span>
+          <div class="chips" id="role">
+            <button type="button" class="chip active" data-value="individual">Individual</button>
+            <button type="button" class="chip" data-value="vendor">Moi Vendor</button>
+            <button type="button" class="chip" data-value="host">Function Host</button>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-lg btn-block" type="submit" id="sendBtn">Send OTP</button>
+        <p class="xs muted center">We'll send a 6-digit code by SMS. Standard rates may apply.</p>
+      </form>
+
+      <!-- Operator PIN login (counter staff, device-bound) -->
+      <form id="pinForm" class="stack hide" novalidate>
+        <div class="alert"><span data-icon="info"></span><div>Operators get their <b>Vendor code</b>, <b>Operator ID</b> and <b>PIN</b> from the Moi vendor. Access works only during your assigned function time.</div></div>
+        <div class="grid grid-2" style="gap:12px">
+          <div class="field"><label class="label" for="vcode">Vendor code</label><input class="input" id="vcode" placeholder="JDMOI" autocapitalize="characters" value="JDMOI"></div>
+          <div class="field"><label class="label" for="opid">Operator ID</label><input class="input" id="opid" placeholder="OP-102" autocapitalize="characters"></div>
+        </div>
+        <div class="field">
+          <span class="label">4-digit PIN</span>
+          <div class="otp" id="pin" style="max-width:260px"><input type="password"><input type="password"><input type="password"><input type="password"></div>
+        </div>
+        <button class="btn btn-primary btn-lg btn-block" type="submit">Start counter</button>
+        <a class="small center" href="#">Forgot PIN? Ask your vendor to reset</a>
+      </form>
+
+      <div class="divider">or</div>
+      <div class="grid grid-2" style="gap:10px">
+        <a class="btn btn-outline" href="pay.html"><span data-icon="scan"></span>Pay Moi as guest</a>
+        <a class="btn btn-outline" href="admin.html"><span data-icon="shield"></span>Admin login</a>
+      </div>
+
+      <p class="center small mt-6">New to OneMoi? <a href="register.html">Create free account</a></p>
+      <p class="center xs muted">By continuing you agree to our <a href="#">Terms</a> &amp; <a href="#">Privacy Policy</a></p>
+    </div>
+  </section>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const otpForm = document.getElementById("otpForm"), pinForm = document.getElementById("pinForm");
+  let role = "individual";
+  OM.bindGroup(document.getElementById("mode"), v => { otpForm.classList.toggle("hide", v !== "otp"); pinForm.classList.toggle("hide", v !== "pin"); });
+  OM.bindGroup(document.getElementById("role"), v => (role = v));
+  OM.bindGroup(document.getElementById("lang"), v => {
+    const ta = v === "ta";
+    document.getElementById("hTitle").textContent = ta ? "மீண்டும் வருக 👋" : "Welcome back 👋";
+    document.getElementById("hSub").textContent = ta ? "உங்கள் மொபைல் எண் மூலம் உள்நுழையவும்." : "Login with your mobile number to continue.";
+    document.getElementById("sendBtn").textContent = ta ? "OTP அனுப்பு" : "Send OTP";
+  });
+  const pin = OM.initOtp(document.getElementById("pin"));
+
+  const mobile = document.getElementById("mobile");
+  mobile.addEventListener("input", () => { mobile.value = mobile.value.replace(/\D/g, "").slice(0, 10); document.getElementById("mobileErr").classList.add("hide"); });
+
+  otpForm.addEventListener("submit", e => {
+    e.preventDefault();
+    if (!/^[6-9]\d{9}$/.test(mobile.value)) { document.getElementById("mobileErr").classList.remove("hide"); mobile.focus(); return; }
+    const btn = document.getElementById("sendBtn");
+    btn.innerHTML = '<span class="spinner"></span> Sending…'; btn.disabled = true;
+    try { sessionStorage.setItem("OM-mobile", mobile.value); sessionStorage.setItem("OM-role", role); sessionStorage.setItem("OM-flow", "login"); } catch (e) {}
+    setTimeout(() => (location.href = "otp.html"), 700);
+  });
+  pinForm.addEventListener("submit", e => {
+    e.preventDefault();
+    if (pin.value().length < 4) { document.getElementById("pin").classList.add("is-error"); return; }
+    OM.toast("PIN verified · Opening Counter 2", "ok");
+    setTimeout(() => (location.href = "counter.html"), 700);
+  });
+});
+</script>
+</body>
+</html>

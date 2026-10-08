@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#8E1B3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>States & Components · OneMoi</title>
+<link rel="icon" href="../brand/logo-mark.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Tamil:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/moi.css">
+<script src="assets/js/app.js"></script>
+<style>
+  .swatch { border-radius: 16px; overflow: hidden; border: 1px solid var(--border); }
+  .swatch div:first-child { height: 64px; }
+  .swatch div:last-child { padding: 8px 10px; font-size: .75rem; font-weight: 700; }
+  h2.sec { margin: 36px 0 14px; }
+</style>
+</head>
+<body data-shell="vendor" data-page="" data-title="States & components" data-crumb="Design system">
+<main class="content">
+  <h2 class="sec" style="margin-top:0">Screen states</h2>
+  <div class="grid grid-3">
+    <div class="card empty"><div class="empty-art" data-icon="calendar"></div><h3>No functions yet</h3><p>Create your first function to get its Moi code and QR.</p><button class="btn btn-primary mt-2"><span data-icon="plus"></span>Create function</button></div>
+    <div class="card empty"><div class="empty-art" style="background:var(--red-soft);color:var(--red)" data-icon="wifiOff"></div><h3>You're offline</h3><p>Entries are saved on this device and will sync automatically when you're back online.</p><span class="badge red mt-2">3 entries queued</span></div>
+    <div class="card empty"><div class="empty-art" style="background:var(--gold-soft);color:var(--gold-strong)" data-icon="alert"></div><h3>Something went wrong</h3><p>We couldn't load this page. Your data is safe. Please try again.</p><button class="btn btn-outline mt-2"><span data-icon="refresh"></span>Retry</button></div>
+    <div class="card empty"><div class="empty-art" style="background:var(--green-soft);color:var(--green)" data-icon="check"></div><h3>Moi recorded</h3><p>₹1,001 from Ram Kumar · Receipt #0105 sent by SMS.</p></div>
+    <div class="card empty"><div class="empty-art" data-icon="lock"></div><h3>Access window closed</h3><p>Your counter assignment for this function ended at 2:00 PM. Contact your vendor.</p></div>
+    <div class="card empty"><div style="font-size:3.4rem;font-weight:800;color:var(--brand);letter-spacing:-.05em">404</div><h3>Page not found</h3><p>The function code may be wrong or the link may have expired.</p><a class="btn btn-primary mt-2" href="index.html">Go home</a></div>
+  </div>
+
+  <h2 class="sec">Loading</h2>
+  <div class="grid grid-3">
+    <div class="card card-pad center stack"><div class="loader-ring" style="margin:16px auto" data-logo="mark" data-size="64" data-animated></div><div class="small muted">Full-page loader (logo animation)</div></div>
+    <div class="card card-pad stack"><div class="row"><div class="skeleton" style="width:44px;height:44px;border-radius:14px"></div><div class="grow stack-sm"><div class="skeleton" style="height:12px;width:70%"></div><div class="skeleton" style="height:10px;width:40%"></div></div></div><div class="skeleton" style="height:90px"></div><div class="small muted">Skeleton for lists</div></div>
+    <div class="card card-pad stack"><button class="btn btn-primary btn-block"><span class="spinner"></span>Saving…</button><button class="btn btn-outline btn-block" disabled>Disabled</button><div class="small muted">Button loading / disabled</div></div>
+  </div>
+
+  <h2 class="sec">Alerts &amp; toasts</h2>
+  <div class="grid grid-2">
+    <div class="alert"><span data-icon="info"></span><div>Operators can log in only during the assigned time window.</div></div>
+    <div class="alert ok"><span data-icon="check"></span><div>UPI payment confirmed by the bank.</div></div>
+    <div class="alert warn"><span data-icon="alert"></span><div>2 UPI payments are pending bank confirmation.</div></div>
+    <div class="alert err"><span data-icon="x"></span><div>Payment failed. No money was debited.</div></div>
+  </div>
+  <div class="row wrap mt-4"><button class="btn btn-outline" onclick="OM.toast('Info toast')">Info toast</button><button class="btn btn-outline" onclick="OM.toast('Saved successfully','ok')">Success toast</button><button class="btn btn-outline" onclick="OM.toast('Could not save','err')">Error toast</button><button class="btn btn-outline" data-open="demoModal">Modal / bottom sheet</button></div>
+
+  <h2 class="sec">Buttons, badges, inputs</h2>
+  <div class="card card-pad stack">
+    <div class="row wrap"><button class="btn btn-primary">Primary</button><button class="btn btn-gold">Gold</button><button class="btn btn-success">Success</button><button class="btn btn-danger">Danger</button><button class="btn btn-outline">Outline</button><button class="btn btn-ghost">Ghost</button><button class="btn btn-primary btn-icon" data-icon="plus"></button></div>
+    <div class="row wrap"><span class="badge">Default</span><span class="badge brand">Brand</span><span class="badge gold">Gold</span><span class="badge green live"><span class="dot"></span>Live</span><span class="badge red">Failed</span><span class="badge blue">Upcoming</span></div>
+    <div class="grid grid-3" style="gap:12px">
+      <div class="field"><label class="label">Text</label><input class="input" placeholder="Placeholder"></div>
+      <div class="field"><label class="label">Mobile</label><div class="input-group"><span class="addon">+91</span><input class="input" placeholder="98765 43210"></div></div>
+      <div class="field"><label class="label">Invalid</label><input class="input is-invalid" value="12345"><span class="error-text">Enter a valid mobile number</span></div>
+    </div>
+    <div class="segmented" style="max-width:360px" id="seg"><button class="active">Cash</button><button>UPI</button><button>Card</button></div>
+  </div>
+
+  <h2 class="sec">Colour tokens</h2>
+  <div class="grid grid-4" style="grid-template-columns:repeat(auto-fill,minmax(130px,1fr))">
+    <div class="swatch"><div style="background:#8E1B3A"></div><div>Kumkum · #8E1B3A</div></div>
+    <div class="swatch"><div style="background:#F2A516"></div><div>Turmeric · #F2A516</div></div>
+    <div class="swatch"><div style="background:#1F8A5B"></div><div>Banana leaf · #1F8A5B</div></div>
+    <div class="swatch"><div style="background:#FFF9F0"></div><div>Ivory · #FFF9F0</div></div>
+    <div class="swatch"><div style="background:#24161B"></div><div>Ink · #24161B</div></div>
+    <div class="swatch"><div style="background:#C62828"></div><div>Error · #C62828</div></div>
+  </div>
+
+  <div class="modal-backdrop" id="demoModal">
+    <div class="modal" style="max-width:440px">
+      <div class="modal-head"><h3>Correct this entry?</h3><button class="btn btn-ghost btn-icon btn-sm" data-close data-icon="x"></button></div>
+      <div class="modal-body stack"><p class="muted">Entries are never deleted. A reversal is recorded with your reason and shown in the audit log.</p><div class="field"><label class="label">Reason</label><select class="select"><option>Wrong amount</option><option>Wrong guest</option><option>Duplicate entry</option></select></div></div>
+      <div class="modal-foot"><button class="btn btn-outline" data-close>Cancel</button><button class="btn btn-primary" data-close>Submit correction</button></div>
+    </div>
+  </div>
+</main>
+<script>document.addEventListener("DOMContentLoaded", () => OM.bindGroup(document.getElementById("seg")));</script>
+</body>
+</html>
