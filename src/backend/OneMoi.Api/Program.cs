@@ -113,6 +113,12 @@ app.Use(async (ctx, next) =>   // basic security headers
 });
 if (app.Environment.IsDevelopment() || config.GetValue("Swagger:Enabled", false))
 {
+    // Never let the browser keep old Swagger files (an old cached copy shows "Unable to render this definition")
+    app.Use(async (ctx, next) =>
+    {
+        if (ctx.Request.Path.StartsWithSegments("/swagger")) ctx.Response.Headers.CacheControl = "no-store, max-age=0";
+        await next();
+    });
     app.UseSwagger();
     app.UseSwaggerUI(c => c.DocumentTitle = "OneMoi API");
 }
